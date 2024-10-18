@@ -1,0 +1,40 @@
+
+
+td{
+  color: red;
+}
+
+#month{
+  background-color: yellow;
+}
+
+#main-link{
+  color: black;
+}
+
+
+   .calendar {
+      width: 300px;
+      margin: 0 auto;
+      text-align: center;
+		padding: 10px;
+		border-style: solid;
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+    .day {
+      padding: 10px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+    .day.selected {
+      background-color: #90ee90; /* Light green background for selected date */
+    }
