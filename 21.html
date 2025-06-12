@@ -98,6 +98,27 @@ span.rank {
 
 
 
+		this.checkWager = function() {
+			return wager <= cash ? true : false;
+		};
+
+		this.getCash = function() {
+			return cash.formatMoney(2, '.', ',');
+		};
+
+		this.setCash = function(money) {
+			cash += money;
+			this.updateBoard();
+		};
+
+		this.getBank = function() {
+			$('#bank').html('Winnings: $' + bank.formatMoney(2, '.', ','));
+
+			if(bank < 0) {
+				$('#bank').html('Winnings: <span style="color: #D90000">-$' + 
+				bank.formatMoney(2, '.', ',').toString().replace('-', '') + '</span>');
+			}
+		};
 
 
 
