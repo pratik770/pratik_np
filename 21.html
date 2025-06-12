@@ -119,6 +119,39 @@ span.rank {
 				bank.formatMoney(2, '.', ',').toString().replace('-', '') + '</span>');
 			}
 		};
+			}
+
+			clearTimeout(showCards());
+		};
+	}
+
+	function Game() {
+		this.newGame = function() {
+			var wager = $.trim($('#wager').val());
+
+			player.resetWager();
+			player.setWager(wager);
+
+			if(player.checkWager()) {
+				$('#deal').prop('disabled', true);
+				resetBoard();
+				player.setCash(-wager);
+
+				deal      = new Deal();
+				running   = true;
+				blackjack = false;
+				insured   = false;
+
+				player.resetHand();
+				dealer.resetHand();
+				showBoard();
+			} else {
+				player.setWager(-wager);
+				$('#alert').removeClass('alert-info alert-success').addClass('alert-error');
+				showAlert('Wager cannot exceed available cash!');
+			}
+		};
+	}
 
 
 
