@@ -12,15 +12,15 @@ let canHit = true; //allows the player (you) to draw while yourSum <= 21
 
 window.onload = function() {
 
-    document.getElementById("play_table").style.display = "none";
     
-    shuffleDeck();
+    buildDeck();
+    
     startGame();
+    
 }
 
 function buildDeck() {
 
-    document.getElementById("decksize").style.display = "none";
     console.log("Building deck...");
 
     let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
@@ -34,8 +34,11 @@ function buildDeck() {
             }
         }
     }
+
+    
     console.log("unshuffeled deck = " );
     console.log(deck);
+    shuffleDeck();
 }
 
 function shuffleDeck() {
@@ -47,6 +50,8 @@ function shuffleDeck() {
     }
     console.log("Shuffeled deck = " );
     console.log(deck);
+
+   
 }
 
 function startGame() {
