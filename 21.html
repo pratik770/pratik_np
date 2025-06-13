@@ -9,17 +9,35 @@
     </head>
 
     <body>
-        <h2>Dealer: <span id="dealer-sum"></span></h2>
-        <div id="dealer-cards">
-            <img id="hidden" src="./cards/BACK.png">
+        <div id="decksize">
+            <h1>Black Jack</h1>
+            <p>choose number of decks:
+            <select id="decks">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="6" selected>6</option>
+                <option value="8">8</option>
+                <option value="10">10</option>
+            </select>
+            <button id="start">Start</button>
+            </p>
         </div>
 
-        <h2>You: <span id="your-sum"></span></h2>
-        <div id="your-cards"></div>
 
-        <br>
-        <button id="hit">Hit</button>
-        <button id="stay">Stay</button>
-        <p id="results"></p>
+        <div id ="play_table">            
+            <h2>Dealer: <span id="dealer-sum"></span></h2>
+            <div id="dealer-cards">
+                <img id="hidden" src="./cards/BACK.png">
+            </div>
+
+            <h2>You: <span id="your-sum"></span></h2>
+            <div id="your-cards"></div>
+
+            <br>
+            <button id="hit">Hit</button>
+            <button id="stay">Stay</button>
+            <p id="results"></p>
+        </div>
     </body>
 </html>

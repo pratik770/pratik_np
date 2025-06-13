@@ -11,22 +11,31 @@ let deck;
 let canHit = true; //allows the player (you) to draw while yourSum <= 21
 
 window.onload = function() {
-    buildDeck();
+
+    document.getElementById("play_table").style.display = "none";
+    
     shuffleDeck();
     startGame();
 }
 
 function buildDeck() {
+
+    document.getElementById("decksize").style.display = "none";
+    console.log("Building deck...");
+
     let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     let types = ["C", "D", "H", "S"];
     deck = [];
 
-    for (let i = 0; i < types.length; i++) {
-        for (let j = 0; j < values.length; j++) {
-            deck.push(values[j] + "-" + types[i]); //A-C -> K-C, A-D -> K-D
+    for (let i = 0; i < document.getElementById("decks").value; i++) {      
+        for (let i = 0; i < types.length; i++) {
+            for (let j = 0; j < values.length; j++) {
+                deck.push(values[j] + "-" + types[i]); //A-C -> K-C, A-D -> K-D
+            }
         }
     }
-     //console.log(deck);
+    console.log("unshuffeled deck = " );
+    console.log(deck);
 }
 
 function shuffleDeck() {
@@ -36,6 +45,7 @@ function shuffleDeck() {
         deck[i] = deck[j];
         deck[j] = temp;
     }
+    console.log("Shuffeled deck = " );
     console.log(deck);
 }
 
@@ -68,7 +78,7 @@ function startGame() {
     console.log(yourSum);
     document.getElementById("hit").addEventListener("click", hit);
     document.getElementById("stay").addEventListener("click", stay);
-
+    document.getElementById("start").addEventListener("click", buildDeck);
 }
 
 function hit() {
