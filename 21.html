@@ -5,11 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>21</title>
         <link rel="stylesheet" href="21_style.css">
-        <script src="21_script.js"></script>
     </head>
 
     <body>
-        <div id="decksize">
+        <button id="reset" class="btn">Reset</button>
+        <!-- <div id="decksize">
             <h1>Black Jack</h1>
             <p>choose number of decks:
             <select id="decks">
@@ -22,22 +22,32 @@
             </select>
             <button id="start">Start</button>
             </p>
-        </div>
+        </div> -->
 
 
         <div id ="play_table">            
             <h2>Dealer: <span id="dealer-sum"></span></h2>
-            <div id="dealer-cards">
+            <div id="dealer-cards" class="card-container">
                 <img id="hidden" src="./cards/BACK.png">
             </div>
 
             <h2>You: <span id="your-sum"></span></h2>
-            <div id="your-cards"></div>
+            <div id="your-cards" class="card-container"></div>
 
             <br>
-            <button id="hit">Hit</button>
-            <button id="stay">Stay</button>
+            <div id ="dealdiv">
+                <button id ="deal">Deal</button>  
+            </div>
+            <br>
+            <div id ="action-buttons">
+                <button id="hit">Hit</button>
+                <button id="stay">Stay</button>
+            </div>
+            
             <p id="results"></p>
         </div>
+
+         <script src="21_script.js"></script>
+
     </body>
 </html>
