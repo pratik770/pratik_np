@@ -2,6 +2,8 @@ document.getElementById("deal").addEventListener("click", ready);
 document.getElementById("reset").addEventListener("click", reset);
 
 let deck = [];
+ptotal = 0;
+dtotal = 0;
 
 function reset() {
     
@@ -20,15 +22,17 @@ function ready(){
 
 function startGame() {
     console.log("Starting game...");
+
+    dealhand();
+
     document.getElementById("action-buttons").style.display = "block";
     
     // Additional game setup logic can go here
     // For example, initializing player hands, scores, etc.
     
     // Example: Initialize player hands
-    playerHand = [];
-    dealerHand = [];
-    
+   
+   
     // Deal initial cards to player and dealer
     // dealInitialCards();
 }
@@ -64,4 +68,42 @@ function shuffleDeck() {
     console.log(deck);
 
    
+}
+
+function dealhand() {
+    playerHand = [];
+    dealerHand = [];
+    
+    for (let i = 0; i < 2; i++) {
+
+        playerHand.push(deck[0]);
+        ptotal += getValue(deck[0]); // Get the value of the card
+        document.getElementById("your-sum").innerText = ptotal;
+        console.log("Dealt card to player: " + ptotal);
+        deck.shift(); // Remove the dealt cards from the deck
+
+
+        dealerHand.push(deck[0]);
+        dtotal += getValue(deck[0]); // Get the value of the card
+        console.log("Dealt card to dealer: " + dtotal);
+        deck.shift(); // Remove the dealt cards from the deck
+
+
+        console.log("Player Hand: ", playerHand);
+        console.log("Dealer Hand: ", dealerHand);
+    }
+    
+}
+
+function getValue(card) {
+    let data = card.split("-"); // "4-C" -> ["4", "C"]
+    let value = data[0];
+
+    if (isNaN(value)) { //A J Q K
+        if (value == "A") {
+            return 11;
+        }
+        return 10;
+    }
+    return parseInt(value);
 }
