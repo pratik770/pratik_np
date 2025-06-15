@@ -203,4 +203,13 @@ function showcards() {
         cardImg.src = "./cards/" + card + ".png";
         document.getElementById("your-cards").append(cardImg);
     }
+
+    document.getElementById("hidden").style.display = "none"; // Hide the hidden card
+    for (let i = 0; i < dealerHand.length; i++) {
+
+        let cardImg = document.createElement("img");
+        let card = dealerHand[i];
+        cardImg.src = "./cards/" + card + ".png";
+        document.getElementById("dealer-cards").append(cardImg);
+    }
 }
