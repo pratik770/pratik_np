@@ -1,6 +1,7 @@
 document.getElementById("deal").addEventListener("click", ready);
 document.getElementById("reset").addEventListener("click", reset);
 document.getElementById("hit").addEventListener("click", hit);
+document.getElementById("stand").addEventListener("click", stand);
 
 let deck = [];
 let sdeck = [];
@@ -153,6 +154,8 @@ function hit() {
         console.log("Player busts! Total: " + ptotal);
         document.getElementById("your-sum").innerText = ptotal + "\nBUST!";
         canHit = false;
+        document.getElementById("action-buttons").style.display = "none"; // Hide action buttons
+        document.getElementById("deal").style.display = "inline"; // Show deal button
         // document.getElementById("hit").disabled = true; // Disable hit button
     } else if (ptotal === 21) {
         
@@ -160,4 +163,33 @@ function hit() {
         // document.getElementById("hit").disabled = true; // Disable hit button
     }
 
+}
+
+function stand(){
+    console.log("Stand called with hand: ");
+    canHit = false;
+    document.getElementById("action-buttons").style.display = "none"; // Hide action buttons
+    document.getElementById("deal").style.display = "inline"; // Show deal button
+
+    // Dealer's turn logic
+    while (dtotal < 17) {
+        dealerHand.push(deck[0]);
+        dtotal += getValue(deck[0]); // Get the value of the card
+        deck.shift(); // Remove the dealt cards from the deck
+        console.log("Dealt card to dealer: " + dtotal);
+    }
+
+    document.getElementById("dealer-sum").innerText = dtotal;
+
+    // Determine winner
+    // if (ptotal > 21) {
+    //     document.getElementById("your-sum").innerText = ptotal + "\nBUST!";
+    //     alert("You lose!");
+    // } else if (dtotal > 21 || ptotal > dtotal) {
+    //     alert("You win!");
+    // } else if (ptotal < dtotal) {
+    //     alert("You lose!");
+    // } else {
+    //     alert("It's a tie!");
+    // }
 }
