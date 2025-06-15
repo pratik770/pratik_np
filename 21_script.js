@@ -29,7 +29,6 @@ function reset() {
 
 }
 
-
 function ready(){
     console.log("Ready...");
     document.getElementById("deal").style.display = "none";
@@ -72,7 +71,6 @@ function buildDeck() {
     console.log(deck)
     shuffleDeck();
 }
-
 
 function shuffleDeck() {
     for (let i = 0; i < deck.length; i++) {
@@ -130,7 +128,6 @@ function getValue(card) {
     return parseInt(value);
 }
 
-
 function hit() {
 
     console.log("Hit called with hand: ");
@@ -179,6 +176,8 @@ function stand(){
         console.log("Dealt card to dealer: " + dtotal);
     }
 
+    console.log("Dealer's final hand: ", dealerHand);
+
     document.getElementById("dealer-sum").innerText = dtotal;
 
     // Determine winner
@@ -192,4 +191,16 @@ function stand(){
     // } else {
     //     alert("It's a tie!");
     // }
+
+    showcards();
+}
+
+function showcards() {
+    console.log("Showing cards...");
+    for (let i = 0; i < playerHand.length; i++) {
+        let cardImg = document.createElement("img");
+        let card = playerHand[i];
+        cardImg.src = "./cards/" + card + ".png";
+        document.getElementById("your-cards").append(cardImg);
+    }
 }
