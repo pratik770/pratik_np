@@ -1,14 +1,30 @@
 document.getElementById("deal").addEventListener("click", ready);
 document.getElementById("reset").addEventListener("click", reset);
+document.getElementById("hit").addEventListener("click", hit);
 
 let deck = [];
+let sdeck = [];
 ptotal = 0;
 dtotal = 0;
+canHit = true;
+let playerHand = [];
 
 function reset() {
     
+   
+    document.getElementById("deal").style.display = "inline";
     document.getElementById("action-buttons").style.display = "none";
-    document.getElementById("deal").style.display = "block";
+    let deck = [];
+    let sdeck = [];
+    ptotal = 0;
+    dtotal = 0;
+    canHit = true;
+    let playerHand = [];
+
+    document.getElementById("your-sum").innerText = "";
+    document.getElementById("dealer-sum").innerText = "";
+
+
 
 }
 
@@ -25,7 +41,7 @@ function startGame() {
 
     dealhand();
 
-    document.getElementById("action-buttons").style.display = "block";
+    document.getElementById("action-buttons").style.display = "inline";
     
     // Additional game setup logic can go here
     // For example, initializing player hands, scores, etc.
@@ -64,8 +80,10 @@ function shuffleDeck() {
         deck[i] = deck[j];
         deck[j] = temp;
     }
+    sdeck=deck;
     console.log("Shuffled deck = " );
     console.log(deck);
+    console.log(sdeck);
 
    
 }
@@ -85,6 +103,7 @@ function dealhand() {
 
         dealerHand.push(deck[0]);
         dtotal += getValue(deck[0]); // Get the value of the card
+        document.getElementById("dealer-sum").innerText = getValue(dealerHand[0]);
         console.log("Dealt card to dealer: " + dtotal);
         deck.shift(); // Remove the dealt cards from the deck
 
@@ -93,6 +112,8 @@ function dealhand() {
         console.log("Dealer Hand: ", dealerHand);
     }
     
+    console.log("remaining deck: ");
+    console.log(deck);
 }
 
 function getValue(card) {
@@ -106,4 +127,37 @@ function getValue(card) {
         return 10;
     }
     return parseInt(value);
+}
+
+
+function hit() {
+
+    console.log("Hit called with hand: ");
+    if (!canHit) {
+        return;
+    }
+
+    playerHand.push(deck[0]);
+    ptotal += getValue(deck[0]); // Get the value of the card
+    document.getElementById("your-sum").innerText = ptotal;
+    console.log("Player total: " + ptotal);
+    
+
+    console.log("Dealt card to player: ");
+    console.log(playerHand);  
+    deck.shift(); // Remove the dealt cards from the deck
+
+    console.log(deck);  
+
+    if (ptotal > 21) {
+        console.log("Player busts! Total: " + ptotal);
+        document.getElementById("your-sum").innerText = ptotal + "\nBUST!";
+        canHit = false;
+        // document.getElementById("hit").disabled = true; // Disable hit button
+    } else if (ptotal === 21) {
+        
+        canHit = false;
+        // document.getElementById("hit").disabled = true; // Disable hit button
+    }
+
 }
