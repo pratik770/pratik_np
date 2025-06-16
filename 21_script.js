@@ -3,6 +3,8 @@ document.getElementById("reset").addEventListener("click", reset);
 document.getElementById("hit").addEventListener("click", hit);
 document.getElementById("stand").addEventListener("click", stand);
 document.getElementById("start").addEventListener("click", start);
+document.getElementById("deal").disabled = true; // Disable deal button initially
+document.getElementById("reset").disabled = true; // Disable reset button initially
 
 let deck = [];
 let sdeck = [];
@@ -36,28 +38,24 @@ function reset() {
 
 }
 
+
 function start(){
     console.log("Ready...");
     document.getElementById("deal").style.display = "none";
     buildDeck();
     startGame();
     document.getElementById("start").disabled = true; // Disable start button after starting the game
+    document.getElementById("deal").disabled = false; // Enable deal button initially
+    document.getElementById("reset").disabled = false; // Enable reset button initially
+
 }
+
 
 function startGame() {
     console.log("Starting game...");
 
     dealhand();
 
-    
-    // Additional game setup logic can go here
-    // For example, initializing player hands, scores, etc.
-    
-    // Example: Initialize player hands
-   
-   
-    // Deal initial cards to player and dealer
-    // dealInitialCards();
 }
 
 function buildDeck() {
@@ -100,46 +98,52 @@ function newgame(){
     dtotal = 0;
     canHit = true;
     playerHand = [];
-    dealerhand=[];
+    dealerHand=[];
     turn = "player"; // Track whose turn it is
     document.getElementById("your-cards").innerHTML = ""; // Clear player cards
-
+    document.getElementById("dealer-cards").innerHTML = '<img id="hidden" src="./cards/BACK.png">'; // Clear dealer cards
+    console.log("New game started");
 }
 
 function dealhand() {
     console.log("dealhand called");
+    dealing = true; // Set dealing to true
 
     newgame();
     document.getElementById("action-buttons").style.display = "inline";
     document.getElementById("deal").style.display = "none"; // Hide deal button
 
 
-    // document.getElementById("your-cards").style.width = "50%"; // Clear player cards 
-    // document.getElementById("your-cards").style.height = "50%"; // Clear player cards   
 
     for (let i = 0; i < 2; i++) {
 
+        turn = "player"; // Set turn to player
         playerHand.push(deck[0]);
         ptotal += getValue(deck[0]); // Get the value of the card
         document.getElementById("your-sum").innerText = ptotal;
-        console.log("Dealt card to player: " + ptotal);
+        console.log("Deal hand to player: " + ptotal);
+        console.log("Player Hand: ", playerHand);
         showcards(); // Show the cards after dealing
         deck.shift(); // Remove the dealt cards from the deck
 
 
+        turn = "dealer"; // Set turn to dealer
         dealerHand.push(deck[0]);
         dtotal += getValue(deck[0]); // Get the value of the card
         document.getElementById("dealer-sum").innerText = getValue(dealerHand[0]);
-        console.log("Dealt card to dealer: " + dtotal);
+        console.log("Dealer Hand: ", dealerHand);
+        console.log("Deal hand to dealer: " + dtotal);
+        showcards(); // Show the cards after dealing
         deck.shift(); // Remove the dealt cards from the deck
 
 
-        console.log("Player Hand: ", playerHand);
-        console.log("Dealer Hand: ", dealerHand);
+        
+        
     }
     
     console.log("remaining deck: ");
     console.log(deck);
+    dealing = false; // Set dealing to false
 }
 
 function getValue(card) {
@@ -195,9 +199,33 @@ function stand(){
     console.log("Stand called with hand: ");
     canHit = false;
     document.getElementById("action-buttons").style.display = "none"; // Hide action buttons
+
+    // // Dealer's turn logic
+    // while (dtotal < 17) {
+    //     dealerHand.push(deck[0]);
+    //     dtotal += getValue(deck[0]); // Get the value of the card
+    //     deck.shift(); // Remove the dealt cards from the deck
+    //     console.log("Dealt card to dealer: " + dtotal);
+
+    // }
+
+    dealerTurn(); // Start dealer's turn
+
+    console.log("Dealer's final hand: ", dealerHand);
+
+    document.getElementById("dealer-sum").innerText = dtotal;
+
     document.getElementById("deal").style.display = "inline"; // Show deal button
 
-    // Dealer's turn logic
+
+}
+
+
+function dealerTurn() {
+    console.log("Dealer's turn started...");
+
+    turn = "dealer"; // Set turn to dealer
+
     while (dtotal < 17) {
         dealerHand.push(deck[0]);
         dtotal += getValue(deck[0]); // Get the value of the card
@@ -206,26 +234,43 @@ function stand(){
     }
 
     console.log("Dealer's final hand: ", dealerHand);
-
     document.getElementById("dealer-sum").innerText = dtotal;
+
+    // Show dealer's cards
+    showcards();
+
 
 }
 
+
+
 function showcards() {
     console.log("Showing cards...");
-    if (turn == "player") {
-        // for (let i = 0; i < playerHand.length; i++) {
+
+    if (turn == "player" && dealing) {
+        for (let i = 0; i < playerHand.length; i++) {
             let cardImg = document.createElement("img");
             let card = playerHand[playerHand.length - 1]; // Get the last card dealt to the player
             cardImg.src = "./cards/" + card + ".png";
             document.getElementById("your-cards").append(cardImg);
-        // }
+            console.log("Show card to player && dealing true: ");
+        }
     }
 
 
-    if (turn == "dealer") {
+    if (turn == "dealer" && dealing) {
 
-        document.getElementById("hidden").style.display = "none"; // Hide the hidden card
+        let cardImg = document.createElement("img");
+        let card = dealerHand[0];
+        cardImg.src = "./cards/" + card + ".png";
+        document.getElementById("dealer-cards").append(cardImg);
+        console.log("Show card to dealing && dealing: ");
+
+    }
+
+    if (turn == "dealer" && !dealing) {
+
+        document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer's cards before showing new ones
 
         for (let i = 0; i < dealerHand.length; i++) {
 
@@ -235,4 +280,7 @@ function showcards() {
             document.getElementById("dealer-cards").append(cardImg);
         }
     }
+
+    
+    
 }
