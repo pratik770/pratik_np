@@ -113,8 +113,6 @@ function dealhand() {
     document.getElementById("action-buttons").style.display = "inline";
     document.getElementById("deal").style.display = "none"; // Hide deal button
 
-
-
     for (let i = 0; i < 2; i++) {
 
         turn = "player"; // Set turn to player
@@ -123,7 +121,6 @@ function dealhand() {
         document.getElementById("your-sum").innerText = ptotal;
         console.log("Deal hand to player: " + ptotal);
         console.log("Player Hand: ", playerHand);
-        showcards(); // Show the cards after dealing
         deck.shift(); // Remove the dealt cards from the deck
 
 
@@ -133,14 +130,12 @@ function dealhand() {
         document.getElementById("dealer-sum").innerText = getValue(dealerHand[0]);
         console.log("Dealer Hand: ", dealerHand);
         console.log("Deal hand to dealer: " + dtotal);
-        showcards(); // Show the cards after dealing
         deck.shift(); // Remove the dealt cards from the deck
-
-
-        
         
     }
     
+    showcards(); // Show the cards after dealing
+
     console.log("remaining deck: ");
     console.log(deck);
     dealing = false; // Set dealing to false
@@ -247,19 +242,15 @@ function dealerTurn() {
 function showcards() {
     console.log("Showing cards...");
 
-    if (turn == "player" && dealing) {
+    if (dealing) {
         for (let i = 0; i < playerHand.length; i++) {
             let cardImg = document.createElement("img");
-            let card = playerHand[playerHand.length - 1]; // Get the last card dealt to the player
+            let card = playerHand[i]; // Get the last card dealt to the player
             cardImg.src = "./cards/" + card + ".png";
             document.getElementById("your-cards").append(cardImg);
             console.log("Show card to player && dealing true: ");
         }
-    }
-
-
-    if (turn == "dealer" && dealing) {
-
+    
         let cardImg = document.createElement("img");
         let card = dealerHand[0];
         cardImg.src = "./cards/" + card + ".png";
@@ -268,18 +259,15 @@ function showcards() {
 
     }
 
-    if (turn == "dealer" && !dealing) {
+    if(!dealing) {
+        let cardImg = document.createElement("img");
+        let card = playerHand[i]; // Get the last card dealt to the player
+        cardImg.src = "./cards/" + card + ".png";
+        document.getElementById("your-cards").append(cardImg);
+        console.log("Show card to player && dealing true: ");
 
-        document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer's cards before showing new ones
-
-        for (let i = 0; i < dealerHand.length; i++) {
-
-            let cardImg = document.createElement("img");
-            let card = dealerHand[i];
-            cardImg.src = "./cards/" + card + ".png";
-            document.getElementById("dealer-cards").append(cardImg);
-        }
     }
+
 
     
     
