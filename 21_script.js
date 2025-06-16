@@ -1,4 +1,4 @@
-document.getElementById("deal").addEventListener("click", ready);
+document.getElementById("deal").addEventListener("click", dealhand);
 document.getElementById("reset").addEventListener("click", reset);
 document.getElementById("hit").addEventListener("click", hit);
 document.getElementById("stand").addEventListener("click", stand);
@@ -9,6 +9,12 @@ ptotal = 0;
 dtotal = 0;
 canHit = true;
 let playerHand = [];
+let dealerHand = []; // Initialize dealer's hand
+turn = "player"; // Track whose turn it is
+
+window.onload = function() {
+    ready();
+}
 
 function reset() {
     
@@ -41,7 +47,6 @@ function startGame() {
 
     dealhand();
 
-    document.getElementById("action-buttons").style.display = "inline";
     
     // Additional game setup logic can go here
     // For example, initializing player hands, scores, etc.
@@ -87,16 +92,35 @@ function shuffleDeck() {
    
 }
 
-function dealhand() {
+function newgame(){
+    ptotal = 0;
+    dtotal = 0;
+    canHit = true;
     playerHand = [];
-    dealerHand = [];
-    
+    dealerhand=[];
+    turn = "player"; // Track whose turn it is
+    document.getElementById("your-cards").innerHTML = ""; // Clear player cards
+
+}
+
+function dealhand() {
+    console.log("dealhand called");
+
+    newgame();
+    document.getElementById("action-buttons").style.display = "inline";
+    document.getElementById("deal").style.display = "none"; // Hide deal button
+
+
+    // document.getElementById("your-cards").style.width = "50%"; // Clear player cards 
+    // document.getElementById("your-cards").style.height = "50%"; // Clear player cards   
+
     for (let i = 0; i < 2; i++) {
 
         playerHand.push(deck[0]);
         ptotal += getValue(deck[0]); // Get the value of the card
         document.getElementById("your-sum").innerText = ptotal;
         console.log("Dealt card to player: " + ptotal);
+        showcards(); // Show the cards after dealing
         deck.shift(); // Remove the dealt cards from the deck
 
 
@@ -121,7 +145,7 @@ function getValue(card) {
 
     if (isNaN(value)) { //A J Q K
         if (value == "A") {
-            return 11;
+            return 1;
         }
         return 10;
     }
@@ -146,6 +170,8 @@ function hit() {
     deck.shift(); // Remove the dealt cards from the deck
 
     console.log(deck);  
+
+    showcards(); // Show the cards after hitting
 
     if (ptotal > 21) {
         console.log("Player busts! Total: " + ptotal);
@@ -180,36 +206,30 @@ function stand(){
 
     document.getElementById("dealer-sum").innerText = dtotal;
 
-    // Determine winner
-    // if (ptotal > 21) {
-    //     document.getElementById("your-sum").innerText = ptotal + "\nBUST!";
-    //     alert("You lose!");
-    // } else if (dtotal > 21 || ptotal > dtotal) {
-    //     alert("You win!");
-    // } else if (ptotal < dtotal) {
-    //     alert("You lose!");
-    // } else {
-    //     alert("It's a tie!");
-    // }
-
-    showcards();
 }
 
 function showcards() {
     console.log("Showing cards...");
-    for (let i = 0; i < playerHand.length; i++) {
-        let cardImg = document.createElement("img");
-        let card = playerHand[i];
-        cardImg.src = "./cards/" + card + ".png";
-        document.getElementById("your-cards").append(cardImg);
+    if (turn == "player") {
+        // for (let i = 0; i < playerHand.length; i++) {
+            let cardImg = document.createElement("img");
+            let card = playerHand[playerHand.length - 1]; // Get the last card dealt to the player
+            cardImg.src = "./cards/" + card + ".png";
+            document.getElementById("your-cards").append(cardImg);
+        // }
     }
 
-    document.getElementById("hidden").style.display = "none"; // Hide the hidden card
-    for (let i = 0; i < dealerHand.length; i++) {
 
-        let cardImg = document.createElement("img");
-        let card = dealerHand[i];
-        cardImg.src = "./cards/" + card + ".png";
-        document.getElementById("dealer-cards").append(cardImg);
+    if (turn == "dealer") {
+
+        document.getElementById("hidden").style.display = "none"; // Hide the hidden card
+
+        for (let i = 0; i < dealerHand.length; i++) {
+
+            let cardImg = document.createElement("img");
+            let card = dealerHand[i];
+            cardImg.src = "./cards/" + card + ".png";
+            document.getElementById("dealer-cards").append(cardImg);
+        }
     }
 }
