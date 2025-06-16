@@ -2,6 +2,7 @@ document.getElementById("deal").addEventListener("click", dealhand);
 document.getElementById("reset").addEventListener("click", reset);
 document.getElementById("hit").addEventListener("click", hit);
 document.getElementById("stand").addEventListener("click", stand);
+document.getElementById("start").addEventListener("click", start);
 
 let deck = [];
 let sdeck = [];
@@ -12,9 +13,9 @@ let playerHand = [];
 let dealerHand = []; // Initialize dealer's hand
 turn = "player"; // Track whose turn it is
 
-window.onload = function() {
-    ready();
-}
+// window.onload = function() {
+//     document.getElementsByClassName("btn").disabled = true; // Enable all buttons on page load
+// }
 
 function reset() {
     
@@ -35,11 +36,12 @@ function reset() {
 
 }
 
-function ready(){
+function start(){
     console.log("Ready...");
     document.getElementById("deal").style.display = "none";
     buildDeck();
     startGame();
+    document.getElementById("start").disabled = true; // Disable start button after starting the game
 }
 
 function startGame() {
@@ -66,13 +68,14 @@ function buildDeck() {
     let types = ["C", "D", "H", "S"];
     deck = [];
 
-    
-    for (let i = 0; i < types.length; i++) {
-        for (let j = 0; j < values.length; j++) {
-            deck.push(values[j] + "-" + types[i]); //A-C -> K-C, A-D -> K-D
-        }        
+    for (let i = 0; i < document.getElementById("decks").value; i++) {
+        for (let i = 0; i < types.length; i++) {
+            for (let j = 0; j < values.length; j++) {
+                deck.push(values[j] + "-" + types[i]); //A-C -> K-C, A-D -> K-D
+            }        
+        }
     }
-    
+
     console.log(deck)
     shuffleDeck();
 }
