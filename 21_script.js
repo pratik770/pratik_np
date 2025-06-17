@@ -209,6 +209,10 @@ function dealerTurn() {
 
     turn = "dealer"; // Set turn to dealer
 
+     if (pbust === true) {
+        console.log("Dealer stands with total: " + dtotal);
+    }
+
     while(dtotal < 17 && pbust === false) {
         dealerHand.push(deck[0]);
         dtotal += getValue(deck[0]); // Get the value of the card
@@ -216,9 +220,7 @@ function dealerTurn() {
         deck.shift(); // Remove the dealt cards from the deck
 
     }
-    if (dtotal < 17 && pbust === true) {
-        console.log("Dealer stands with total: " + dtotal);
-    }
+   
 
     document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer cards
     showcards();
