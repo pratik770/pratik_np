@@ -14,14 +14,15 @@ canHit = true;
 let playerHand = [];
 let dealerHand = []; // Initialize dealer's hand
 turn = "player"; // Track whose turn it is
+pAce = false;
+dAce = false;
 
 // window.onload = function() {
 //     document.getElementsByClassName("btn").disabled = true; // Enable all buttons on page load
 // }
 
 function reset() {
-    
-   
+
     document.getElementById("deal").style.display = "inline";
     document.getElementById("action-buttons").style.display = "none";
     let deck = [];
@@ -30,33 +31,27 @@ function reset() {
     dtotal = 0;
     canHit = true;
     let playerHand = [];
+    pAce = false;
+    dAce = false;
 
     document.getElementById("your-sum").innerText = "";
     document.getElementById("dealer-sum").innerText = "";
-
-
 
 }
 
 
 function start(){
-    console.log("Ready...");
+
+    console.log("Starting...");
     document.getElementById("deal").style.display = "none";
     buildDeck();
-    startGame();
+    dealhand();
     document.getElementById("start").disabled = true; // Disable start button after starting the game
     document.getElementById("deal").disabled = false; // Enable deal button initially
     document.getElementById("reset").disabled = false; // Enable reset button initially
 
 }
 
-
-function startGame() {
-    console.log("Starting game...");
-
-    dealhand();
-
-}
 
 function buildDeck() {
 
@@ -117,6 +112,9 @@ function dealhand() {
 
         turn = "player"; // Set turn to player
         playerHand.push(deck[0]);
+        if (getValue(deck[0]) == 1){
+            pAce = true;
+        }
         ptotal += getValue(deck[0]); // Get the value of the card
         document.getElementById("your-sum").innerText = ptotal;
         console.log("Deal hand to player: " + ptotal);
@@ -160,6 +158,8 @@ function hit() {
     if (!canHit) {
         return;
     }
+
+    turn = "player";
 
     playerHand.push(deck[0]);
     ptotal += getValue(deck[0]); // Get the value of the card
@@ -259,9 +259,9 @@ function showcards() {
 
     }
 
-    if(!dealing) {
+    if(!dealing && turn == "player") {
         let cardImg = document.createElement("img");
-        let card = playerHand[i]; // Get the last card dealt to the player
+        let card = playerHand[playerHand.length -1]; // Get the last card dealt to the player
         cardImg.src = "./cards/" + card + ".png";
         document.getElementById("your-cards").append(cardImg);
         console.log("Show card to player && dealing true: ");
