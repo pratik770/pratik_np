@@ -31,14 +31,12 @@ function reset() {
     dtotal = 0;
     canHit = true;
     let playerHand = [];
-    pAce = false;
-    dAce = false;
+    pbust = false; // Reset player bust flag
 
     document.getElementById("your-sum").innerText = "";
     document.getElementById("dealer-sum").innerText = "";
 
 }
-
 
 function start(){
 
@@ -48,10 +46,9 @@ function start(){
     dealhand();
     document.getElementById("start").disabled = true; // Disable start button after starting the game
     document.getElementById("deal").disabled = false; // Enable deal button initially
-    document.getElementById("reset").disabled = false; // Enable reset button initially
+    // document.getElementById("reset").disabled = false; // Enable reset button initially
 
 }
-
 
 function buildDeck() {
 
@@ -73,7 +70,7 @@ function buildDeck() {
     shuffleDeck();
 }
 
-function shuffleDeck() {
+function shuffleDeck() { 
     for (let i = 0; i < deck.length; i++) {
         let j = Math.floor(Math.random() * deck.length); // (0-1) * 52 => (0-51.9999)
         let temp = deck[i];
@@ -112,9 +109,6 @@ function dealhand() {
 
         turn = "player"; // Set turn to player
         playerHand.push(deck[0]);
-        if (getValue(deck[0]) == 1){
-            pAce = true;
-        }
         ptotal += getValue(deck[0]); // Get the value of the card
         document.getElementById("your-sum").innerText = ptotal;
         console.log("Deal hand to player: " + ptotal);
@@ -182,9 +176,11 @@ function hit() {
         document.getElementById("action-buttons").style.display = "none"; // Hide action buttons
         document.getElementById("deal").style.display = "inline"; // Show deal button
         // document.getElementById("hit").disabled = true; // Disable hit button
-    } else if (ptotal === 21) {
+        pbust = true; // Set player bust flag
+        dealerTurn(); // Start dealer's turn
         
-        canHit = false;
+    } else if (ptotal === 21) {
+        stand(); // Automatically stand if player hits 21
         // document.getElementById("hit").disabled = true; // Disable hit button
     }
 
@@ -195,14 +191,7 @@ function stand(){
     canHit = false;
     document.getElementById("action-buttons").style.display = "none"; // Hide action buttons
 
-    // // Dealer's turn logic
-    // while (dtotal < 17) {
-    //     dealerHand.push(deck[0]);
-    //     dtotal += getValue(deck[0]); // Get the value of the card
-    //     deck.shift(); // Remove the dealt cards from the deck
-    //     console.log("Dealt card to dealer: " + dtotal);
-
-    // }
+    pbust = false; // Reset player bust flag
 
     dealerTurn(); // Start dealer's turn
 
@@ -215,19 +204,20 @@ function stand(){
 
 }
 
-
 function dealerTurn() {
     console.log("Dealer's turn started...");
 
     turn = "dealer"; // Set turn to dealer
 
-    while (dtotal < 17) {
+    if (dtotal < 17 && pbust === false) {
         dealerHand.push(deck[0]);
         dtotal += getValue(deck[0]); // Get the value of the card
         console.log("Dealt card to dealer: " + dtotal);
-
         deck.shift(); // Remove the dealt cards from the deck
 
+    }
+    else if (dtotal < 17 && pbust === true) {
+        console.log("Dealer stands with total: " + dtotal);
     }
 
     document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer cards
@@ -238,8 +228,6 @@ function dealerTurn() {
     // Show dealer's cards
    
 }
-
-
 
 function showcards() {
     console.log("Showing cards...");
