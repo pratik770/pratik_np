@@ -16,6 +16,7 @@ let dealerHand = []; // Initialize dealer's hand
 turn = "player"; // Track whose turn it is
 pAce = false;
 dAce = false;
+ace = false; // Flag to track if an Ace is present
 
 // window.onload = function() {
 //     document.getElementsByClassName("btn").disabled = true; // Enable all buttons on page load
@@ -95,6 +96,8 @@ function newgame(){
     document.getElementById("your-cards").innerHTML = ""; // Clear player cards
     document.getElementById("dealer-cards").innerHTML = '<img id="hidden" src="./cards/BACK.png">'; // Clear dealer cards
     console.log("New game started");
+    pAce = false; // Reset player ace flag
+    dAce = false; // Reset dealer ace flag
 }
 
 function dealhand() {
@@ -110,7 +113,14 @@ function dealhand() {
         turn = "player"; // Set turn to player
         playerHand.push(deck[0]);
         ptotal += getValue(deck[0]); // Get the value of the card
-        document.getElementById("your-sum").innerText = ptotal;
+        console.log("Player Ace: " + pAce);
+        if (pAce === true){
+            checkBJ(); // Check if player has a blackjack
+            document.getElementById("your-sum").innerText = ptotal + "/" + (ptotal + 10); // Show both values of Ace
+        }
+        else{
+            document.getElementById("your-sum").innerText = ptotal;
+        }
         console.log("Deal hand to player: " + ptotal);
         console.log("Player Hand: ", playerHand);
         deck.shift(); // Remove the dealt cards from the deck
@@ -119,6 +129,7 @@ function dealhand() {
         turn = "dealer"; // Set turn to dealer
         dealerHand.push(deck[0]);
         dtotal += getValue(deck[0]); // Get the value of the card
+        console.log("Dealer Ace: " + dAce);
         document.getElementById("dealer-sum").innerText = getValue(dealerHand[0]);
         console.log("Dealer Hand: ", dealerHand);
         console.log("Deal hand to dealer: " + dtotal);
@@ -139,6 +150,12 @@ function getValue(card) {
 
     if (isNaN(value)) { //A J Q K
         if (value == "A") {
+            if (turn == "player" ){
+                pAce = true; // Set player ace flag
+            }
+            else if (turn == "dealer") {
+                dAce = true; // Set dealer ace flag
+            }
             return 1;
         }
         return 10;
@@ -191,6 +208,9 @@ function stand(){
     canHit = false;
     document.getElementById("action-buttons").style.display = "none"; // Hide action buttons
 
+    if (pAce === true && ptotal < 11) {
+        document.getElementById("your-sum").innerText = (ptotal + 10); // Show both values of Ace
+    }
     pbust = false; // Reset player bust flag
 
     dealerTurn(); // Start dealer's turn
@@ -273,4 +293,13 @@ function showcards() {
 
     
     
+}
+
+function checkBJ(){
+    if (pAce === true && ptotal === 11) {
+        console.log("Player has a Blackjack!");
+        document.getElementById("your-sum").innerText = "Blackjack!";
+
+
+    }
 }
