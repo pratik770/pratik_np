@@ -209,14 +209,14 @@ function dealerTurn() {
 
     turn = "dealer"; // Set turn to dealer
 
-    if (dtotal < 17 && pbust === false) {
+    while(dtotal < 17 && pbust === false) {
         dealerHand.push(deck[0]);
         dtotal += getValue(deck[0]); // Get the value of the card
         console.log("Dealt card to dealer: " + dtotal);
         deck.shift(); // Remove the dealt cards from the deck
 
     }
-    else if (dtotal < 17 && pbust === true) {
+    if (dtotal < 17 && pbust === true) {
         console.log("Dealer stands with total: " + dtotal);
     }
 
