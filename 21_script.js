@@ -224,17 +224,19 @@ function dealerTurn() {
     while (dtotal < 17) {
         dealerHand.push(deck[0]);
         dtotal += getValue(deck[0]); // Get the value of the card
-        deck.shift(); // Remove the dealt cards from the deck
         console.log("Dealt card to dealer: " + dtotal);
+
+        deck.shift(); // Remove the dealt cards from the deck
+
     }
 
+    document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer cards
+    showcards();
     console.log("Dealer's final hand: ", dealerHand);
     document.getElementById("dealer-sum").innerText = dtotal;
 
     // Show dealer's cards
-    showcards();
-
-
+   
 }
 
 
@@ -266,6 +268,16 @@ function showcards() {
         document.getElementById("your-cards").append(cardImg);
         console.log("Show card to player && dealing true: ");
 
+    }
+
+    if(!dealing && turn == "dealer") {
+        for (let i = 0; i < dealerHand.length; i++) {
+            let cardImg = document.createElement("img");
+            let card = dealerHand[i]; // Get the last card dealt to the player
+            cardImg.src = "./cards/" + card + ".png";
+            document.getElementById("dealer-cards").append(cardImg);
+            console.log("Show card to dealer && dealing true: ");
+        }
     }
 
 
