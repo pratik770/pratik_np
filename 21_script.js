@@ -4,7 +4,7 @@ document.getElementById("hit").addEventListener("click", hit);
 document.getElementById("stand").addEventListener("click", stand);
 document.getElementById("start").addEventListener("click", start);
 document.getElementById("deal").disabled = true; // Disable deal button initially
-document.getElementById("reset").disabled = true; // Disable reset button initially
+// document.getElementById("reset").disabled = true; // Disable reset button initially
 
 let deck = [];
 let sdeck = [];
