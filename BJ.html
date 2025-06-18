@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" >
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>21</title>
+        <link rel="stylesheet" href="BJ.css">
+    </head>
+
+    <body>
+        <div id="decksize">
+            <h1>Black Jack ed</h1>
+            <p>choose number of decks:
+            <select id="decks">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="6">6</option>
+                <option value="12">10</option>
+            </select>
+            <button id="start">Start</button>
+            </p>
+        </div>
+
+        <!-- <button id="reset" class="btn">Reset</button> -->
+
+        <div id ="play_table" style.display = "flex";">            
+            <h2>Dealer: <span id="dealer-sum"></span></h2>
+            <div id="dealer-cards" class="card-container">
+                <img id="hidden" src="./cards/BACK.png">
+            </div>
+
+            <h2>You: <span id="your-sum"></span></h2>
+            <div id="your-cards" class="card-container"></div>
+
+            <br>
+            <div id ="dealdiv">
+                <button id ="deal" class ="btn">Deal</button>  
+            </div>
+            <br>
+            <div id ="action-buttons">
+                <button id="hit" class ="btn">Hit</button>
+                <button id="stand" class="btn">Stand</button>
+            </div>
+            
+            <p id="results"></p>
+        </div>
+
+         <script src="BJ.js"></script>
+
+    </body>
+</html>
