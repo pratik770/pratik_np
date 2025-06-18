@@ -298,7 +298,7 @@ function showcards() {
 function checkBJ(){
     if (pAce === true && ptotal === 11) {
         console.log("Player has a Blackjack!");
-        document.getElementById("your-sum").innerText = "Blackjack!";
+        document.getElementById("results").innerText = "Blackjack!";
 
 
     }
