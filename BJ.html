@@ -23,7 +23,7 @@
 
         <!-- <button id="reset" class="btn">Reset</button> -->
 
-        <div id ="play_table" style.display = "flex";">            
+        <div id ="play_table">            
             <h2>Dealer: <span id="dealer-sum"></span></h2>
             <div id="dealer-cards" class="card-container">
                 <img id="hidden" src="./cards/BACK.png">
@@ -31,7 +31,15 @@
 
             <h2>You: <span id="your-sum"></span></h2>
             <div id="your-cards" class="card-container"></div>
-
+            <br>
+            <h2>Bet: <span id="bet-amount">0</span></h2>
+            <div id="bet-controls">
+                <button id="bet-5" class="chip"> 5 </button>
+                <button id="bet-10" class="chip"> 10 </button>
+                <button id="bet-20" class="chip"> 20 </button>
+                <button id="bet-50" class="chip"> 50 </button>
+                <button id="bet-100" class="chip"> 100 </button>
+            </div>
             <br>
             <div id ="dealdiv">
                 <button id ="deal" class ="btn">Deal</button>  
