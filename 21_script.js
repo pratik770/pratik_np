@@ -174,7 +174,13 @@ function hit() {
 
     playerHand.push(deck[0]);
     ptotal += getValue(deck[0]); // Get the value of the card
-    document.getElementById("your-sum").innerText = ptotal;
+    if (pAce === true && ptotal < 11) {
+        document.getElementById("your-sum").innerText = ptotal + "/" + (ptotal + 10); // Show both values of Ace
+    }
+    else{
+        document.getElementById("your-sum").innerText = ptotal;
+    }
+    // document.getElementById("your-sum").innerText = ptotal;
     console.log("Player total: " + ptotal);
     
 
@@ -298,7 +304,7 @@ function showcards() {
 function checkBJ(){
     if (pAce === true && ptotal === 11) {
         console.log("Player has a Blackjack!");
-        document.getElementById("results").innerText = "Blackjack!";
+        document.getElementById("results").innerText = "Player Blackjack!";
 
 
     }
