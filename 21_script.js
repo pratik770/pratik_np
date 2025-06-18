@@ -1,5 +1,5 @@
 document.getElementById("deal").addEventListener("click", dealhand);
-document.getElementById("reset").addEventListener("click", reset);
+// document.getElementById("reset").addEventListener("click", reset);
 document.getElementById("hit").addEventListener("click", hit);
 document.getElementById("stand").addEventListener("click", stand);
 document.getElementById("start").addEventListener("click", start);
