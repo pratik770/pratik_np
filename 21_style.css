@@ -9,6 +9,11 @@ body {
     margin-left: -25px;
 }
 
+#start-card img{
+    height: 70px;
+    width: 50px;
+    margin: 1px;
+}
 
 
 #your-cards img {

@@ -28,18 +28,22 @@
 
         <div id ="play_table">            
             <h2>Dealer: <span id="dealer-sum"></span></h2>
-            <div id="dealer-cards" class="card-container">
+            <div id="start-card" class="card-container">
                 <img id="hidden" src="./cards/BACK.png">
             </div>
+             <div id="dealer-cards" class="card-container">
+            </div>
+            <div id ="gap">
+                <br>
+            </div>
 
-            <h2>You: <span id="your-sum"></span></h2>
             <div id="your-cards" class="card-container"></div>
+            <h2>You: <span id="your-sum"></span></h2>
 
-            <br>
             <div id ="dealdiv">
                 <button id ="deal" class ="btn">Deal</button>  
             </div>
-            <br>
+            <!-- <br> -->
             <div id ="action-buttons">
                 <button id="hit" class ="btn">Hit</button>
                 <button id="stand" class="btn">Stand</button>

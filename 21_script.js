@@ -17,6 +17,8 @@ turn = "player"; // Track whose turn it is
 pAce = false;
 dAce = false;
 ace = false; // Flag to track if an Ace is present
+pjack = false; // Flag to track if player has a blackjack
+djack = false; // Flag to track if dealer has a blackjack
 
 // window.onload = function() {
 //     document.getElementsByClassName("btn").disabled = true; // Enable all buttons on page load
@@ -47,6 +49,7 @@ function start(){
     dealhand();
     document.getElementById("start").disabled = true; // Disable start button after starting the game
     document.getElementById("deal").disabled = false; // Enable deal button initially
+    document.getElementById("start-card").style.display = "none"; // Hide start card
     // document.getElementById("reset").disabled = false; // Enable reset button initially
 
 }
@@ -98,6 +101,8 @@ function newgame(){
     console.log("New game started");
     pAce = false; // Reset player ace flag
     dAce = false; // Reset dealer ace flag
+    pjack = false; // Reset player blackjack flag
+    djack = false; // Reset dealer blackjack flag
 }
 
 function dealhand() {
@@ -105,6 +110,8 @@ function dealhand() {
     dealing = true; // Set dealing to true
 
     newgame();
+
+    // deck = ["A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
     document.getElementById("action-buttons").style.display = "inline";
     document.getElementById("deal").style.display = "none"; // Hide deal button
 
@@ -130,14 +137,29 @@ function dealhand() {
         dealerHand.push(deck[0]);
         dtotal += getValue(deck[0]); // Get the value of the card
         console.log("Dealer Ace: " + dAce);
-        document.getElementById("dealer-sum").innerText = getValue(dealerHand[0]);
+        if (dAce === true){
+            checkBJ(); // Check if player has a blackjack
+            if (djack === true) {
+                document.getElementById("results").innerText = "Dealer Blackjack!";
+                document.getElementById("dealer-sum").innerText = dtotal + "/" + (dtotal + 10); // Show both values of Ace
+            }
+        }
+        else {
+            document.getElementById("dealer-sum").innerText = getValue(dealerHand[0]);
+        }
+        // document.getElementById("dealer-sum").innerText = getValue(dealerHand[0]);
         console.log("Dealer Hand: ", dealerHand);
         console.log("Deal hand to dealer: " + dtotal);
         deck.shift(); // Remove the dealt cards from the deck
         
     }
-    
     showcards(); // Show the cards after dealing
+
+    if (pjack === true || djack === true) {
+        handend(); // End the hand if either player or dealer has a blackjack
+    }
+    
+    
 
     console.log("remaining deck: ");
     console.log(deck);
@@ -240,14 +262,21 @@ function dealerTurn() {
     }
 
     while(dtotal < 17 && pbust === false) {
-        dealerHand.push(deck[0]);
-        dtotal += getValue(deck[0]); // Get the value of the card
-        console.log("Dealt card to dealer: " + dtotal);
-        deck.shift(); // Remove the dealt cards from the deck
+        if (dAce === true && dtotal < 11) {
+            dtotal += 10;
+            // if (dtotal > 16) {
+            //     return // Reset dealer ace flag if total exceeds 21
+            // }
+        }
+        else if (dtotal < 17) {
+            dealerHand.push(deck[0]);
+            dtotal += getValue(deck[0]); // Get the value of the card
+            console.log("Dealt card to dealer: " + dtotal);
+            deck.shift(); // Remove the dealt cards from the deck
+        }
 
     }
    
-
     document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer cards
     showcards();
     console.log("Dealer's final hand: ", dealerHand);
@@ -295,9 +324,6 @@ function showcards() {
             console.log("Show card to dealer && dealing true: ");
         }
     }
-
-
-    
     
 }
 
@@ -305,7 +331,20 @@ function checkBJ(){
     if (pAce === true && ptotal === 11) {
         console.log("Player has a Blackjack!");
         document.getElementById("results").innerText = "Player Blackjack!";
-
-
+        pjack = true; // Set player blackjack flag
     }
+    if (dAce === true && dtotal === 11) {
+        console.log("Dealer has a Blackjack!");
+        document.getElementById("results").innerText = "Dealer Blackjack!";
+        djack = true; // Set dealer blackjack flag
+    }
+
+    
 }
+
+function handend() {
+    console.log("Hand ended");
+    if (pjack === true && djack === true) {
+        document.getElementById("results").innerText = "Push! Both have Blackjack!";
+    }
+}   
