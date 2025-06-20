@@ -1,97 +1,156 @@
-document.getElementById("deal").addEventListener("click", dealhand);
-document.getElementById("hit").addEventListener("click", hit);
-document.getElementById("stand").addEventListener("click", stand);
-document.getElementById("start").addEventListener("click", start);
-document.getElementById("deal").disabled = true; // Disable deal button initially
-document.getElementById("reset").disabled = true; // Disable reset button initially
+let deck = [];
+let suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+let values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
+let playerHands = [[]];  // Array of hands, supports split
+let dealerHand = [];
+let currentHandIndex = 0;  // To track which hand the player is playing
 
+let playerChoseDoubleDown = false;
 
-function buildDeck() {
-
-    console.log("Building deck...");
-
-    let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-    let types = ["C", "D", "H", "S"];
+function createDeck(numDecks) {
     deck = [];
-
-    for (let i = 0; i < document.getElementById("decks").value; i++) {
-        for (let i = 0; i < types.length; i++) {
-            for (let j = 0; j < values.length; j++) {
-                deck.push(values[j] + "-" + types[i]); //A-C -> K-C, A-D -> K-D
-            }        
+    for (let i = 0; i < numDecks; i++) {
+        for (let suit of suits) {
+            for (let value of values) {
+                deck.push({ value: value, suit: suit });
+            }
         }
     }
+}
 
-    console.log(deck)
+function shuffleDeck() {
+    for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+}
+
+function startGame() {
+    playerHands = [[]];  // Reset player hands
+    dealerHand = [];
+    currentHandIndex = 0;
+    playerChoseDoubleDown = false;
+
+    const numDecks = parseInt(document.getElementById('num-decks').value);
+    createDeck(numDecks);
     shuffleDeck();
-}
-
-function shuffleDeck() { 
-    for (let i = 0; i < deck.length; i++) {
-        let j = Math.floor(Math.random() * deck.length); // (0-1) * 52 => (0-51.9999)
-        let temp = deck[i];
-        deck[i] = deck[j];
-        deck[j] = temp;
-    }
-    sdeck=deck;
-    console.log("Shuffled deck = " );
-    console.log(deck);
-    console.log(sdeck);
-}
-
-function start(){
-
-    console.log("Starting...");
-    document.getElementById("deal").style.display = "none";
-    buildDeck();
-    dealhand();
-    document.getElementById("start").disabled = true; // Disable start button after starting the game
-    document.getElementById("deal").disabled = false; // Enable deal button initially
-    // document.getElementById("reset").disabled = false; // Enable reset button initially
-
-}
-
-function dealhand() {
-    console.log("dealhand called");
-    dealing = true; // Set dealing to true
-
-    newgame();
-    document.getElementById("action-buttons").style.display = "inline";
-    document.getElementById("deal").style.display = "none"; // Hide deal button
-
-    for (let i = 0; i < 2; i++) {
-
-        turn = "player"; // Set turn to player
-        playerHand.push(deck[0]);
-        ptotal += getValue(deck[0]); // Get the value of the card
-        console.log("Player Ace: " + pAce);
-        if (pAce === true){
-            checkBJ(); // Check if player has a blackjack
-            document.getElementById("your-sum").innerText = ptotal + "/" + (ptotal + 10); // Show both values of Ace
-        }
-        else{
-            document.getElementById("your-sum").innerText = ptotal;
-        }
-        console.log("Deal hand to player: " + ptotal);
-        console.log("Player Hand: ", playerHand);
-        deck.shift(); // Remove the dealt cards from the deck
-
-
-        turn = "dealer"; // Set turn to dealer
-        dealerHand.push(deck[0]);
-        dtotal += getValue(deck[0]); // Get the value of the card
-        console.log("Dealer Ace: " + dAce);
-        document.getElementById("dealer-sum").innerText = getValue(dealerHand[0]);
-        console.log("Dealer Hand: ", dealerHand);
-        console.log("Deal hand to dealer: " + dtotal);
-        deck.shift(); // Remove the dealt cards from the deck
-        
-    }
     
-    showcards(); // Show the cards after dealing
-
-    console.log("remaining deck: ");
-    console.log(deck);
-    dealing = false; // Set dealing to false
+    dealCards();
+    updateGameState();
+    enableControls();
 }
+
+function dealCards() {
+    playerHands[0].push(deck.pop(), deck.pop());
+    dealerHand.push(deck.pop(), deck.pop());
+}
+
+function getHandValue(hand) {
+    let value = 0;
+    let aceCount = 0;
+
+    hand.forEach(card => {
+        if (card.value === 'A') {
+            aceCount++;
+            value += 11;
+        } else if (['K', 'Q', 'J'].includes(card.value)) {
+            value += 10;
+        } else {
+            value += parseInt(card.value);
+        }
+    });
+
+    while (value > 21 && aceCount) {
+        value -= 10;
+        aceCount--;
+    }
+
+    return value;
+}
+
+function updateGameState() {
+    document.getElementById('player-cards').textContent = playerHands[currentHandIndex].map(card => `${card.value} of ${card.suit}`).join(', ');
+    document.getElementById('player-score').textContent = `Score: ${getHandValue(playerHands[currentHandIndex])}`;
+
+    document.getElementById('dealer-cards').textContent = dealerHand.map(card => `${card.value} of ${card.suit}`).join(', ');
+    document.getElementById('dealer-score').textContent = `Score: ${getHandValue(dealerHand)}`;
+}
+
+function hit() {
+    playerHands[currentHandIndex].push(deck.pop());
+    updateGameState();
+    checkGameStatus();
+}
+
+function stand() {
+    if (currentHandIndex < playerHands.length - 1) {
+        currentHandIndex++;
+        updateGameState();
+    } else {
+        while (getHandValue(dealerHand) < 17) {
+            dealerHand.push(deck.pop());
+            updateGameState();
+        }
+        checkGameStatus();
+    }
+}
+
+function doubleDown() {
+    if (!playerChoseDoubleDown) {
+        playerChoseDoubleDown = true;
+        playerHands[currentHandIndex].push(deck.pop());
+        updateGameState();
+        stand();
+    }
+}
+
+function split() {
+    if (playerHands[currentHandIndex].length === 2 && playerHands[currentHandIndex][0].value === playerHands[currentHandIndex][1].value) {
+        const newHand = [playerHands[currentHandIndex].pop()];
+        playerHands.push(newHand);
+        playerHands[currentHandIndex].push(deck.pop());
+        playerHands[playerHands.length - 1].push(deck.pop());
+        updateGameState();
+        currentHandIndex = playerHands.length - 1;
+        enableControls();
+    }
+}
+
+function checkGameStatus() {
+    const playerScore = getHandValue(playerHands[currentHandIndex]);
+    const dealerScore = getHandValue(dealerHand);
+
+    if (playerScore > 21) {
+        document.getElementById('game-result').textContent = "You busted! Dealer wins.";
+    } else if (dealerScore > 21) {
+        document.getElementById('game-result').textContent = "Dealer busted! You win.";
+    } else if (playerScore === 21) {
+        document.getElementById('game-result').textContent = "Blackjack! You win.";
+    } else if (dealerScore === 21) {
+        document.getElementById('game-result').textContent = "Dealer has Blackjack! Dealer wins.";
+    } else if (playerScore === dealerScore) {
+        document.getElementById('game-result').textContent = "It's a tie!";
+    } else if (playerScore > dealerScore) {
+        document.getElementById('game-result').textContent = "You win!";
+    } else {
+        document.getElementById('game-result').textContent = "Dealer wins!";
+    }
+}
+
+function enableControls() {
+    document.getElementById('hit-btn').disabled = false;
+    document.getElementById('stand-btn').disabled = false;
+    document.getElementById('double-btn').disabled = false;
+    document.getElementById('split-btn').disabled = false;
+}
+
+document.getElementById('hit-btn').addEventListener('click', hit);
+document.getElementById('stand-btn').addEventListener('click', stand);
+document.getElementById('double-btn').addEventListener('click', doubleDown);
+document.getElementById('split-btn').addEventListener('click', split);
+document.getElementById('start-btn').addEventListener('click', startGame);
+
+window.onload = () => {
+    document.getElementById('start-btn').disabled = false;
+};
