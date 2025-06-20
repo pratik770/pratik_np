@@ -111,7 +111,7 @@ function dealhand() {
 
     newgame();
 
-    // deck = ["A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
+    deck = ["A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
     document.getElementById("action-buttons").style.display = "inline";
     document.getElementById("deal").style.display = "none"; // Hide deal button
 
@@ -150,17 +150,15 @@ function dealhand() {
         // document.getElementById("dealer-sum").innerText = getValue(dealerHand[0]);
         console.log("Dealer Hand: ", dealerHand);
         console.log("Deal hand to dealer: " + dtotal);
-        deck.shift(); // Remove the dealt cards from the deck
-        
+        deck.shift(); // Remove the dealt cards from the deck   
     }
-    showcards(); // Show the cards after dealing
-
+    
     if (pjack === true || djack === true) {
         handend(); // End the hand if either player or dealer has a blackjack
     }
-    
-    
 
+    showcards(); // Show the cards after dealing
+    
     console.log("remaining deck: ");
     console.log(deck);
     dealing = false; // Set dealing to false
@@ -347,4 +345,20 @@ function handend() {
     if (pjack === true && djack === true) {
         document.getElementById("results").innerText = "Push! Both have Blackjack!";
     }
+    else if (pjack === true) {
+        document.getElementById("results").innerText = "Player wins with Blackjack!";
+    } 
+    else if (djack === true) {
+        document.getElementById("results").innerText = "Dealer wins with Blackjack!";
+    } 
+    
+    document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer cards
+    console.log("Dealer card cleared");
+
+    // for (let i = 0; i < dealerHand.length; i++) {
+    //     let cardImg = document.createElement("img");
+    //     let card = dealerHand[i]; // Get the last card dealt to the player
+    //     cardImg.src = "./cards/" + card + ".png";
+    //     document.getElementById("dealer-cards").append(cardImg);
+    // }   tr
 }   
