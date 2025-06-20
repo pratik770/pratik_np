@@ -70,12 +70,6 @@ function buildDeck() {
         }
     }
 
-    deck.forEach(src => {
-        let img = new Image();
-        i = 0;
-        img.src = "./cards/" + deck[i] + ".png"; // Load the card images
-        i++;
-    });
     console.log(deck)
     shuffleDeck();
 }
