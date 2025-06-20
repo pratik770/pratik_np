@@ -98,6 +98,7 @@ function newgame(){
     turn = "player"; // Track whose turn it is
     document.getElementById("your-cards").innerHTML = ""; // Clear player cards
     document.getElementById("dealer-cards").innerHTML = '<img id="hidden" src="./cards/BACK.png">'; // Clear dealer cards
+    document.getElementById("results").innerText = ""; // Clear results text
     console.log("New game started");
     pAce = false; // Reset player ace flag
     dAce = false; // Reset dealer ace flag
@@ -111,7 +112,7 @@ function dealhand() {
 
     newgame();
 
-    deck = ["A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
+    // deck = ["A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
     document.getElementById("action-buttons").style.display = "inline";
     document.getElementById("deal").style.display = "none"; // Hide deal button
 
@@ -156,8 +157,8 @@ function dealhand() {
     if (pjack === true || djack === true) {
         handend(); // End the hand if either player or dealer has a blackjack
     }
-
     showcards(); // Show the cards after dealing
+
     
     console.log("remaining deck: ");
     console.log(deck);
@@ -274,20 +275,22 @@ function dealerTurn() {
         }
 
     }
-   
-    document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer cards
-    showcards();
-    console.log("Dealer's final hand: ", dealerHand);
-    document.getElementById("dealer-sum").innerText = dtotal;
+    if(pjack === false || djack === false) {
+
+        document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer cards
+        showcards();
+        console.log("Dealer's final hand: ", dealerHand);
+        document.getElementById("dealer-sum").innerText = dtotal;
+    }
 
     // Show dealer's cards
    
 }
 
 function showcards() {
-    console.log("Showing cards...");
+    console.log("Showing cards... from showcards function");
 
-    if (dealing) {
+    if (dealing && pjack === false && djack === false) {
         for (let i = 0; i < playerHand.length; i++) {
             let cardImg = document.createElement("img");
             let card = playerHand[i]; // Get the last card dealt to the player
@@ -301,6 +304,24 @@ function showcards() {
         cardImg.src = "./cards/" + card + ".png";
         document.getElementById("dealer-cards").append(cardImg);
         console.log("Show card to dealing && dealing: ");
+
+    }
+    else if (dealing && (pjack === true || djack === true)) {
+        for (let i = 0; i < playerHand.length; i++) {
+            let cardImg = document.createElement("img");
+            let card = playerHand[i]; // Get the last card dealt to the player
+            cardImg.src = "./cards/" + card + ".png";
+            document.getElementById("your-cards").append(cardImg);
+            console.log("Show card to player && dealing true: ");
+        
+    
+            cardImg = document.createElement("img");
+            card = dealerHand[i];
+            cardImg.src = "./cards/" + card + ".png";
+            document.getElementById("dealer-cards").append(cardImg);
+            console.log("Show card to dealing && dealing: ");
+        }
+
 
     }
 
@@ -335,9 +356,7 @@ function checkBJ(){
         console.log("Dealer has a Blackjack!");
         document.getElementById("results").innerText = "Dealer Blackjack!";
         djack = true; // Set dealer blackjack flag
-    }
-
-    
+    }    
 }
 
 function handend() {
@@ -355,10 +374,10 @@ function handend() {
     document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer cards
     console.log("Dealer card cleared");
 
-    // for (let i = 0; i < dealerHand.length; i++) {
-    //     let cardImg = document.createElement("img");
-    //     let card = dealerHand[i]; // Get the last card dealt to the player
-    //     cardImg.src = "./cards/" + card + ".png";
-    //     document.getElementById("dealer-cards").append(cardImg);
-    // }   tr
+   
+        
+    document.getElementById("action-buttons").style.display = "none";
+    document.getElementById("deal").style.display = "inline"; // Hide deal button
+
+
 }   
