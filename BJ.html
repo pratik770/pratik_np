@@ -1,59 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" >
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>21</title>
-        <link rel="stylesheet" href="BJ.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game">
+        <h1>Blackjack Game</h1>
 
-    <body>
-        <div id="decksize">
-            <h1>Black Jack ed</h1>
-            <p>choose number of decks:
-            <select id="decks">
-                <option value="1">1</option>
-                <option value="2" selected>2</option>
-                <option value="6">6</option>
-                <option value="12">10</option>
+        <!-- Number of decks selection -->
+        <div id="deck-selection">
+            <label for="num-decks">Select Number of Decks: </label>
+            <select id="num-decks">
+                <option value="1">1 Deck</option>
+                <option value="2">2 Decks</option>
+                <option value="4">4 Decks</option>
+                <option value="6">6 Decks</option>
+                <option value="8">8 Decks</option>
             </select>
-            <button id="start">Start</button>
-            </p>
+            <button id="start-btn">Start Game</button>
         </div>
 
-        <!-- <button id="reset" class="btn">Reset</button> -->
-
-        <div id ="play_table">            
-            <h2>Dealer: <span id="dealer-sum"></span></h2>
-            <div id="dealer-cards" class="card-container">
-                <img id="hidden" src="./cards/BACK.png">
-            </div>
-
-            <h2>You: <span id="your-sum"></span></h2>
-            <div id="your-cards" class="card-container"></div>
-            <br>
-            <h2>Bet: <span id="bet-amount">0</span></h2>
-            <div id="bet-controls">
-                <button id="bet-5" class="chip"> 5 </button>
-                <button id="bet-10" class="chip"> 10 </button>
-                <button id="bet-20" class="chip"> 20 </button>
-                <button id="bet-50" class="chip"> 50 </button>
-                <button id="bet-100" class="chip"> 100 </button>
-            </div>
-            <br>
-            <div id ="dealdiv">
-                <button id ="deal" class ="btn">Deal</button>  
-            </div>
-            <br>
-            <div id ="action-buttons">
-                <button id="hit" class ="btn">Hit</button>
-                <button id="stand" class="btn">Stand</button>
-            </div>
-            
-            <p id="results"></p>
+        <div id="player-hand">
+            <h2>Your Hand:</h2>
+            <div id="player-cards"></div>
+            <p id="player-score"></p>
+        </div>
+        <div id="dealer-hand">
+            <h2>Dealer's Hand:</h2>
+            <div id="dealer-cards"></div>
+            <p id="dealer-score"></p>
+        </div>
+        
+        <!-- Game controls -->
+        <div id="controls">
+            <button id="hit-btn">Hit</button>
+            <button id="stand-btn">Stand</button>
+            <button id="double-btn">Double Down</button>
+            <button id="split-btn">Split</button>
         </div>
 
-         <script src="BJ.js"></script>
+        <div id="game-result"></div>
+    </div>
 
-    </body>
+    <script src="game.js"></script>
+</body>
 </html>
