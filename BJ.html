@@ -4,12 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blackjack</title>
-    <link rel="stylesheet" href="BJ.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <h1>Blackjack Game</h1>
-        
+
+        <!-- Betting Information -->
+        <div id="betting">
+            <p>Your Balance: $<span id="balance">1000</span></p>
+            <p>Place Bet: $<input type="number" id="betAmount" min="1" max="1000" value="100"></p>
+            <button id="placeBetBtn">Place Bet</button>
+        </div>
+
+        <!-- Game Info -->
         <div id="gameInfo">
             <p>Your Hand: <span id="playerHand"></span></p>
             <p>Dealer's Hand: <span id="dealerHand"></span></p>
@@ -18,13 +26,16 @@
             <p id="result"></p>
         </div>
 
+        <!-- Control Buttons -->
         <div class="buttons">
-            <button id="hitBtn">Hit</button>
-            <button id="standBtn">Stand</button>
-            <button id="newGameBtn">New Game</button>
+            <button id="hitBtn" disabled>Hit</button>
+            <button id="standBtn" disabled>Stand</button>
+            <button id="doubleDownBtn" disabled>Double Down</button>
+            <button id="splitBtn" disabled>Split</button>
+            <button id="newGameBtn" disabled>New Game</button>
         </div>
     </div>
 
-    <script src="BJ.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
