@@ -3,53 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackjack Game</title>
-    <link rel="stylesheet" href="BJ.css">
+    <title>Blackjack</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
-        <div class="bankroll-container">
-            <h2 id="bankroll">Bankroll: $1000</h2>
+    <div class="container">
+        <h1>Blackjack Game</h1>
+        
+        <div id="gameInfo">
+            <p>Your Hand: <span id="playerHand"></span></p>
+            <p>Dealer's Hand: <span id="dealerHand"></span></p>
+            <p>Your Score: <span id="playerScore">0</span></p>
+            <p>Dealer's Score: <span id="dealerScore">0</span></p>
+            <p id="result"></p>
         </div>
 
-        <!-- Bet Input Section -->
-        <div class="bet-container">
-            <label for="bet-input">Enter Bet Amount:</label>
-            <input type="number" id="bet-input" min="1" placeholder="Enter Bet">
-            <button id="start">Start Game</button>
-            <p id="bet-amount">Bet: $0</p>
-        </div>
-
-        <!-- Game Actions -->
-        <div id="action-buttons" class="hidden">
-            <button id="hit">Hit</button>
-            <button id="stand">Stand</button>
-            <button id="deal">Deal</button>
-        </div>
-
-        <!-- Card Display Section -->
-        <div id="cards-display">
-            <div id="your-cards">
-                <h3>Your Cards</h3>
-            </div>
-            <div id="dealer-cards">
-                <h3>Dealer's Cards</h3>
-            </div>
-        </div>
-
-        <!-- Results Section -->
-        <div id="results-container">
-            <h3 id="results"></h3>
-            <p id="your-sum"></p>
-            <p id="dealer-sum"></p>
-        </div>
-
-        <!-- Hidden Start Card Display -->
-        <div id="start-card" class="hidden">
-            <img src="./cards/BACK.png" alt="start-card">
+        <div class="buttons">
+            <button id="hitBtn">Hit</button>
+            <button id="standBtn">Stand</button>
+            <button id="newGameBtn">New Game</button>
         </div>
     </div>
 
-    <script src="BJ.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
