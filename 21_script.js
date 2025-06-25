@@ -25,6 +25,7 @@ djack = false; // Flag to track if dealer has a blackjack
 // }
 
 function reset() {
+    console.log("Reset called");
 
     document.getElementById("deal").style.display = "inline";
     document.getElementById("action-buttons").style.display = "none";
@@ -42,8 +43,8 @@ function reset() {
 }
 
 function start(){
+    console.log("start called");
 
-    console.log("Starting...");
     document.getElementById("deal").style.display = "none";
     buildDeck();
     dealhand();
@@ -55,8 +56,7 @@ function start(){
 }
 
 function buildDeck() {
-
-    console.log("Building deck...");
+    console.log("buildDeck called");
 
     let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     let types = ["C", "D", "H", "S"];
@@ -75,21 +75,25 @@ function buildDeck() {
 }
 
 function shuffleDeck() { 
+    console.log("shuffleDeck called");
+
     for (let i = 0; i < deck.length; i++) {
         let j = Math.floor(Math.random() * deck.length); // (0-1) * 52 => (0-51.9999)
         let temp = deck[i];
         deck[i] = deck[j];
         deck[j] = temp;
     }
-    sdeck=deck;
+    // sdeck=deck;
     console.log("Shuffled deck = " );
     console.log(deck);
-    console.log(sdeck);
+    // console.log(sdeck);
 
    
 }
 
 function newgame(){
+    console.log("newgame called");
+
     ptotal = 0;
     dtotal = 0;
     canHit = true;
@@ -99,7 +103,6 @@ function newgame(){
     document.getElementById("your-cards").innerHTML = ""; // Clear player cards
     document.getElementById("dealer-cards").innerHTML = '<img id="hidden" src="./cards/BACK.png">'; // Clear dealer cards
     document.getElementById("results").innerText = ""; // Clear results text
-    console.log("New game started");
     pAce = false; // Reset player ace flag
     dAce = false; // Reset dealer ace flag
     pjack = false; // Reset player blackjack flag
@@ -108,11 +111,12 @@ function newgame(){
 
 function dealhand() {
     console.log("dealhand called");
+
     dealing = true; // Set dealing to true
 
     newgame();
 
-    // deck = ["A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
+    deck = ["A-C", "A-D", "2-C", "5-D","A-C", "8-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
     document.getElementById("action-buttons").style.display = "inline";
     document.getElementById("deal").style.display = "none"; // Hide deal button
 
@@ -121,7 +125,6 @@ function dealhand() {
         turn = "player"; // Set turn to player
         playerHand.push(deck[0]);
         ptotal += getValue(deck[0]); // Get the value of the card
-        console.log("Player Ace: " + pAce);
         if (pAce === true){
             checkBJ(); // Check if player has a blackjack
             document.getElementById("your-sum").innerText = ptotal + "/" + (ptotal + 10); // Show both values of Ace
@@ -129,7 +132,6 @@ function dealhand() {
         else{
             document.getElementById("your-sum").innerText = ptotal;
         }
-        console.log("Deal hand to player: " + ptotal);
         console.log("Player Hand: ", playerHand);
         deck.shift(); // Remove the dealt cards from the deck
 
@@ -143,6 +145,10 @@ function dealhand() {
             if (djack === true) {
                 document.getElementById("results").innerText = "Dealer Blackjack!";
                 document.getElementById("dealer-sum").innerText = dtotal + "/" + (dtotal + 10); // Show both values of Ace
+            }
+            else{
+                document.getElementById("dealer-sum").innerText = getValue(dealerHand[0])+ "/" + (getValue(dealerHand[0]) + 10); // Show both values of Ace 
+
             }
         }
         else {
@@ -158,7 +164,6 @@ function dealhand() {
         handend(); // End the hand if either player or dealer has a blackjack
     }
     showcards(); // Show the cards after dealing
-
     
     console.log("remaining deck: ");
     console.log(deck);
@@ -166,6 +171,8 @@ function dealhand() {
 }
 
 function getValue(card) {
+    console.log("getValue called by " + turn);
+
     let data = card.split("-"); // "4-C" -> ["4", "C"]
     let value = data[0];
 
@@ -182,11 +189,12 @@ function getValue(card) {
         return 10;
     }
     return parseInt(value);
+    
 }
 
 function hit() {
+    console.log("Hit called");
 
-    console.log("Hit called with hand: ");
     if (!canHit) {
         return;
     }
@@ -231,7 +239,8 @@ function hit() {
 }
 
 function stand(){
-    console.log("Stand called with hand: ");
+    console.log("Stand called: ");
+
     canHit = false;
     document.getElementById("action-buttons").style.display = "none"; // Hide action buttons
 
@@ -252,7 +261,7 @@ function stand(){
 }
 
 function dealerTurn() {
-    console.log("Dealer's turn started...");
+    console.log("dealerTurn called " + dtotal);
 
     turn = "dealer"; // Set turn to dealer
 
@@ -262,10 +271,8 @@ function dealerTurn() {
 
     while(dtotal < 17 && pbust === false) {
         if (dAce === true && dtotal < 11) {
-            dtotal += 10;
-            // if (dtotal > 16) {
-            //     return // Reset dealer ace flag if total exceeds 21
-            // }
+            // dtotal += 10;
+            console.log("Dealer Ace adjusted: " + dtotal);
         }
         else if (dtotal < 17) {
             dealerHand.push(deck[0]);
@@ -273,8 +280,8 @@ function dealerTurn() {
             console.log("Dealt card to dealer: " + dtotal);
             deck.shift(); // Remove the dealt cards from the deck
         }
-
     }
+
     if(pjack === false || djack === false) {
 
         document.getElementById("dealer-cards").innerHTML = ""; // Clear dealer cards
@@ -288,7 +295,7 @@ function dealerTurn() {
 }
 
 function showcards() {
-    console.log("Showing cards... from showcards function");
+    console.log("Showcards called");
 
     if (dealing && pjack === false && djack === false) {
         for (let i = 0; i < playerHand.length; i++) {
@@ -347,6 +354,8 @@ function showcards() {
 }
 
 function checkBJ(){
+    console.log("checkBJ called by " + turn);
+
     if (pAce === true && ptotal === 11) {
         console.log("Player has a Blackjack!");
         document.getElementById("results").innerText = "Player Blackjack!";
@@ -360,7 +369,8 @@ function checkBJ(){
 }
 
 function handend() {
-    console.log("Hand ended");
+    console.log("Handend called");
+
     if (pjack === true && djack === true) {
         document.getElementById("results").innerText = "Push! Both have Blackjack!";
     }
