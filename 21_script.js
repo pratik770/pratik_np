@@ -5,6 +5,9 @@ const start_btn = document.getElementById("start");
 const dealer_card = document.getElementById("dealer-cards");
 const player_card = document.getElementById("your-cards");
 const abutton = document.getElementById("action-buttons");
+const psum = document.getElementById("player-sum");
+const dsum = document.getElementById("dealer-sum");
+const result = document.getElementById("result");
 
 const cardImg = document.createElement("img");
 
@@ -18,12 +21,13 @@ start_btn.addEventListener("click", start);
 
 let deck = [];
 let sdeck = [];
-ptotal = 0;
-dtotal = 0;
+let ptotal = 0;
+let dtotal = 0;
 canHit = true;
 let playerHand = [];
 let dealerHand = []; // Initialize dealer's hand
-turn = "player"; // Track whose turn it is
+let turn = "player"; // Track whose turn it is
+let winner = "tie";
 pAce = false;
 dAce = false;
 pjack = false; // Flag to track if player has a blackjack
@@ -79,7 +83,7 @@ function dealhand() {
     console.log("dealhand called");
 
     //TEMP DECK TO CHECK EDGE CASES
-    // deck = [ "A-C","K-D", "K-C", "A-D","A-C", "8-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
+    deck = [ "A-C","K-D", "K-C", "A-D","A-C", "8-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
 
     turn = "dealing"; // Set turn to dealing
     
@@ -91,6 +95,7 @@ function dealhand() {
     }
     showcards(); // Show player's cards
     checkBJ();
+    total(); // Calculate totals for player and dealer
     turn = "player"; // Set turn to player after dealing cards
     abutton.style.display = "inline"; // Show action buttons
     console.log("Player Hand: " + playerHand);
@@ -117,11 +122,13 @@ function cardValue(card) {
 function dealcard(){
     if (turn === "player") {
         playerHand.push(deck[0]);
-        console.log("Player Hand: " + playerHand);
+        total(); // Update player's total after dealing a new card
+        console.log(turn +" Hand: " + playerHand);
         deck.shift(); // Remove the first card from the deck
     }
     else if (turn === "dealer") {
         dealerHand.push(deck[0]);
+        total(); // Update dealer's total after dealing a new card
         console.log("Dealer Hand: " + dealerHand);
         deck.shift(); // Remove the first card from the deck
     }
@@ -159,6 +166,12 @@ function checkBJ() {
     if(cardValue(dealerHand[0]) === 1 && cardValue(dealerHand[1]) === 10) {
         djack = true;
         console.log("Dealer has a Blackjack!");
+        
+    }
+
+    if(pjack || djack) {
+        console.log("Blackjack detected");
+        handend();
     }
     
 }
@@ -185,8 +198,6 @@ function showcards(){
         dealer_card.append(cardImg);
         console.log("Show dealer's first card && dealing true");
     }
-    
-
 
 
     if (turn === "player") {
@@ -197,4 +208,54 @@ function showcards(){
         console.log("Show card to player && dealing true: ");
     }
     
+}
+
+function total(){
+    console.log("total called for: " + turn);
+
+    if (turn === "dealing") {
+       ptotal = cardValue(playerHand[0]) + cardValue(playerHand[1]);
+       psum.innerHTML = ptotal; // Display player's total
+       dtotal = cardValue(dealerHand[0]);
+       dsum.innerHTML = dtotal; // Display dealer's  face up total
+       dtotal += cardValue(dealerHand[1]); // Add the value of the second card dealt to the dealer
+
+    }
+    else if (turn === "player") {
+        ptotal += cardValue(playerHand[playerHand.length - 1]); // Add the value of the last card dealt to the player
+        psum.innerHTML = ptotal; // Update player's total display
+        console.log("total called for player: "+ turn);
+    }   
+    else if (turn === "dealer") {
+        dtotal += cardValue(dealerHand[dealerHand.length - 1]); // Add the value of the last card dealt to the dealer
+        dsum.innerHTML = dtotal; // Update dealer's total display
+        console.log("total called for dealer: " + turn);
+    }
+}
+
+function handend() {
+    if (pjack && djack) {
+        console.log("Both player and dealer have Blackjack! It's a tie.");
+        result.innerHTML = "Both player and dealer have Blackjack! It's a tie.";
+        winner = "tie";
+        payout();
+    } 
+    else if (pjack) {
+        console.log("Player has Blackjack! Player wins!");
+        result.innerHTML = "Player has Blackjack! Player wins!";  
+        winner = "player";  
+        payout();                
+    } 
+    else if (djack) {
+        console.log("Dealer has Blackjack! Dealer wins!");
+        result.innerHTML = "Dealer has Blackjack! Dealer wins!";
+        winner = "dealer";
+        payout();
+    }
+
+}
+
+function payout() {
+    console.log("payout called" + winner);
+   
 }
