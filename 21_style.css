@@ -32,3 +32,15 @@ body {
     font-size: 20px;
 }
 
+.amt-btn {
+    width: 50px;
+    height: 25px;
+    margin: 5px 5px 10px;
+}
+
+.bet-btn{
+    width: 75px;
+    height: 37.5px;
+    margin: 10px 10px;
+    font-size: large;
+}

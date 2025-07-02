@@ -8,6 +8,7 @@ const abutton = document.getElementById("action-buttons");
 const psum = document.getElementById("player-sum");
 const dsum = document.getElementById("dealer-sum");
 const result = document.getElementById("result");
+const bet_sec = document.getElementById("bet-sec");
 
 const cardImg = document.createElement("img");
 
@@ -34,16 +35,30 @@ pjack = false; // Flag to track if player has a blackjack
 djack = false; // Flag to track if dealer has a blackjack
 
 
+function initalstate() {
+    console.log("initalstate called");
+    let deck = [];
+    let sdeck = [];
+    let ptotal = 0;
+    let dtotal = 0;
+    canHit = true;
+    let playerHand = [];
+    let dealerHand = []; // Initialize dealer's hand
+    let turn = "player"; // Track whose turn it is
+    let winner = "tie";
+    pAce = false;
+    dAce = false;
+    pjack = false; // Flag to track if player has a blackjack
+    djack = false; // Flag to track if dealer has a blackjack
+
+}
 
 function start(){
     console.log("start called");
+    initalstate();
 
-    document.getElementById("deal").style.display = "none";
     buildDeck();
-    dealhand();
-    stand_btn.disabled = false; // Enable stand button
-    hit_btn.disabled = false; // Enable hit button
-    document.getElementById("start-card").style.display = "none"; // Hide start card
+    deal_btn.disabled = false;
 }
 
 function buildDeck() {
@@ -81,9 +96,17 @@ function shuffleDeck() {
 
 function dealhand() {
     console.log("dealhand called");
+    bet_sec.style.display = "none";
+    deal_btn.disabled = true;
+    document.getElementById("deal").style.display = "none";
+
+    stand_btn.disabled = false; // Enable stand button
+    hit_btn.disabled = false; // Enable hit button
+    document.getElementById("start-card").style.display = "none"; // Hide start card
+
 
     //TEMP DECK TO CHECK EDGE CASES
-    deck = [ "A-C","K-D", "K-C", "A-D","A-C", "8-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
+    // deck = [ "A-C","K-D", "K-C", "A-D","A-C", "8-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
 
     turn = "dealing"; // Set turn to dealing
     
@@ -138,6 +161,8 @@ function dealcard(){
 
 function stand() {
     console.log("stand called");
+    hit_btn.disabled = true; // Disable hit button
+    stand_btn.disabled = true; // Disable stand button    
     dealerTurn();
 }
 
