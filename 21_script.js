@@ -262,7 +262,7 @@ function total(){
         
        dtotal = cardValue(dealerHand[0]);
 
-       if (cardValue(dealerHand[0]) ===1){
+       if (cardValue(dealerHand[0]) === 1){
             dsum.innerHTML = dtotal + "/" + (dtotal+10);
        }
        else{
