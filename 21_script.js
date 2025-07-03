@@ -97,8 +97,6 @@ function shuffleDeck() {
 function dealhand() {
     console.log("dealhand called");
     bet_sec.style.display = "none";
-    deal_btn.disabled = true;
-    document.getElementById("deal").style.display = "none";
 
     stand_btn.disabled = false; // Enable stand button
     hit_btn.disabled = false; // Enable hit button
@@ -107,6 +105,8 @@ function dealhand() {
 
     //TEMP DECK TO CHECK EDGE CASES
     // deck = [ "A-C","K-D", "K-C", "A-D","A-C", "8-D", "K-C", "K-D","A-C", "A-D", "K-C", "K-D" ]
+    // deck = [ "A-C", "A-D", "A-S", "A-H","A-C","A-D", "A-S", "A-H","A-C","A-D", "A-S", "A-H","A-C" ]
+    // deck = [ "A-C","2-D", "2-C", "2-D","2-C", "2-D", "2-C", "2-D","A-C", "A-D", "K-C", "K-D" ]
 
     turn = "dealing"; // Set turn to dealing
     
@@ -128,12 +128,13 @@ function dealhand() {
 }
 
 function cardValue(card) {
-    console.log("cardValue called ");
+    console.log("cardValue called: "+ card );
     let data = card.split("-"); // "4-C" -> ["4", "C"]
     let value = data[0];
 
     if (isNaN(value)) { //A J Q K
         if (value == "A") {
+            
             return 1;
         }
         return 10;
@@ -143,8 +144,10 @@ function cardValue(card) {
 }
 
 function dealcard(){
+    console.log("card dealt to: " + turn)
     if (turn === "player") {
         playerHand.push(deck[0]);
+        showcards();
         total(); // Update player's total after dealing a new card
         console.log(turn +" Hand: " + playerHand);
         deck.shift(); // Remove the first card from the deck
@@ -169,7 +172,14 @@ function stand() {
 function dealerTurn() {
     console.log("dealerTurn called");
     turn = "dealer"; // Switch to dealer's turn
-    dealcard(); // Dealer draws a card
+    if (ptotal > 21){
+        dsum.innerHTML = dealerHand[0]+ dealerHand[1];
+        return;
+    }
+    else if (dtotal < 18){
+        dealcard();
+        
+    }
 
 }
 
@@ -206,11 +216,12 @@ function showcards(){
 
     if (turn === "dealing") {
         for (let i = 0; i < playerHand.length; i++) {
+            
             let cardImg = document.createElement("img");
             let card = playerHand[i]; // Get the last card dealt to the player
             cardImg.src = "./cards/" + card + ".png";
             player_card.append(cardImg);
-            console.log("Show card to player && dealing true: ");
+            console.log("showing player card: "+ card);
         }
 
         //HOLE CARD FOR DEALER
@@ -221,7 +232,7 @@ function showcards(){
         card = dealerHand[0]; // Show only the first card of the dealer
         cardImg.src = "./cards/" + card + ".png";
         dealer_card.append(cardImg);
-        console.log("Show dealer's first card && dealing true");
+        console.log("Show dealer's first card: "+ card);
     }
 
 
@@ -240,18 +251,43 @@ function total(){
 
     if (turn === "dealing") {
        ptotal = cardValue(playerHand[0]) + cardValue(playerHand[1]);
-       psum.innerHTML = ptotal; // Display player's total
+
+       if (cardValue(playerHand[0]) === 1 || cardValue(playerHand[1]) === 1){
+            pAce = true;
+            psum.innerHTML = ptotal +"/"+(ptotal + 10)
+       }
+       else{
+            psum.innerHTML = ptotal; // Display player's total
+       }
+        
        dtotal = cardValue(dealerHand[0]);
-       dsum.innerHTML = dtotal; // Display dealer's  face up total
+
+       if (cardValue(dealerHand[0]) ===1){
+            dsum.innerHTML = dtotal + "/" + (dtotal+10);
+       }
+       else{
+            dsum.innerHTML = dtotal; // Display dealer's  face up total
+       }
        dtotal += cardValue(dealerHand[1]); // Add the value of the second card dealt to the dealer
 
     }
-    else if (turn === "player") {
+
+    if (turn === "player") {
         ptotal += cardValue(playerHand[playerHand.length - 1]); // Add the value of the last card dealt to the player
-        psum.innerHTML = ptotal; // Update player's total display
-        console.log("total called for player: "+ turn);
+        if (ptotal < 22){
+            psum.innerHTML = ptotal; // Update player's total display
+            console.log("total called for player: "+ turn);
+
+        }
+        else if(ptotal > 21){
+            psum.innerHTML = ptotal + " Player Bust"; // Update player's total display
+            console.log(turn + " bust");
+            abutton.style.display = "none";
+            dealerTurn();
+        }       
     }   
-    else if (turn === "dealer") {
+
+    if (turn === "dealer") {
         dtotal += cardValue(dealerHand[dealerHand.length - 1]); // Add the value of the last card dealt to the dealer
         dsum.innerHTML = dtotal; // Update dealer's total display
         console.log("total called for dealer: " + turn);
