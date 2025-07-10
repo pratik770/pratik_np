@@ -37,19 +37,20 @@ djack = false; // Flag to track if dealer has a blackjack
 
 function initalstate() {
     console.log("initalstate called");
-    let deck = [];
-    let sdeck = [];
-    let ptotal = 0;
-    let dtotal = 0;
+    sdeck = [];
+    ptotal = 0;
+    dtotal = 0;
     canHit = true;
-    let playerHand = [];
-    let dealerHand = []; // Initialize dealer's hand
-    let turn = "player"; // Track whose turn it is
-    let winner = "tie";
+    playerHand = [];
+    dealerHand = []; // Initialize dealer's hand
+    turn = "player"; // Track whose turn it is
+    winner = "tie";
     pAce = false;
     dAce = false;
     pjack = false; // Flag to track if player has a blackjack
     djack = false; // Flag to track if dealer has a blackjack
+    player_card.innerHTML = "";
+    dealer_card.innerHTML = "";
 
 }
 
@@ -67,6 +68,7 @@ function buildDeck() {
     let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     let types = ["C", "D", "H", "S"];
     deck = [];
+    sdeck = deck;
 
     for (let i = 0; i < document.getElementById("decks").value; i++) {
         for (let j = 0; j < types.length; j++) {
@@ -96,6 +98,7 @@ function shuffleDeck() {
 
 function dealhand() {
     console.log("dealhand called");
+    initalstate();
     bet_sec.style.display = "none";
 
     stand_btn.disabled = false; // Enable stand button
@@ -149,7 +152,7 @@ function dealcard(){
         playerHand.push(deck[0]);
         showcards();
         total(); // Update player's total after dealing a new card
-        console.log(turn +" Hand: " + playerHand);
+        console.log("player Hand: " + playerHand);
         deck.shift(); // Remove the first card from the deck
     }
     else if (turn === "dealer") {
@@ -174,11 +177,13 @@ function dealerTurn() {
     turn = "dealer"; // Switch to dealer's turn
     if (ptotal > 21){
         dsum.innerHTML = dealerHand[0]+ dealerHand[1];
-        return;
+        handend();
     }
-    else if (dtotal < 18){
-        dealcard();
-        
+    else {
+        while(dtotal < 17){
+            dealcard();
+        }
+            
     }
 
 }
@@ -241,8 +246,16 @@ function showcards(){
         let card = playerHand[playerHand.length -1]; // Get the last card dealt to the player
         cardImg.src = "./cards/" + card + ".png";
         player_card.append(cardImg);
-        console.log("Show card to player && dealing true: ");
+        console.log("Show card: " + turn);
     }
+
+    // if (turn === "dealer") {
+    //     let cardImg = document.createElement("img");
+    //     let card = playerHand[playerHand.length -1]; // Get the last card dealt to the player
+    //     cardImg.src = "./cards/" + card + ".png";
+    //     player_card.append(cardImg);
+    //     console.log("Show card: " + turn);
+    // }
     
 }
 
@@ -271,12 +284,23 @@ function total(){
        dtotal += cardValue(dealerHand[1]); // Add the value of the second card dealt to the dealer
 
     }
+    
 
     if (turn === "player") {
         ptotal += cardValue(playerHand[playerHand.length - 1]); // Add the value of the last card dealt to the player
-        if (ptotal < 22){
+        
+        if (pAce === true){
+            if(ptotal < 12){
+                psum.innerHTML = ptotal + "/" + (ptotal + 10)
+                console.log(" Ace true " + psum.innerHTML)
+            }
+            else{
+                pAce = false;
+            }
+        }
+        if (!pAce && ptotal < 22){
             psum.innerHTML = ptotal; // Update player's total display
-            console.log("total called for player: "+ turn);
+            console.log("total: "+ ptotal +" called by: "+ turn);
 
         }
         else if(ptotal > 21){
@@ -288,7 +312,6 @@ function total(){
     }   
 
     if (turn === "dealer") {
-        dtotal += cardValue(dealerHand[dealerHand.length - 1]); // Add the value of the last card dealt to the dealer
         dsum.innerHTML = dtotal; // Update dealer's total display
         console.log("total called for dealer: " + turn);
     }
@@ -313,6 +336,11 @@ function handend() {
         winner = "dealer";
         payout();
     }
+
+    bet_sec.style.display = "inline";
+    
+
+
 
 }
 
