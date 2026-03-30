@@ -2,165 +2,530 @@
 
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Royal Blackjack</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="21cc.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Blackjack</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: #1a5c2a;
+font-family: Georgia, serif;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 16px;
+color: white;
+}
+
+h1 {
+font-size: 1.8rem;
+color: #f0cc6e;
+letter-spacing: 3px;
+margin-bottom: 6px;
+text-align: center;
+}
+
+.chips-display {
+font-size: 1rem;
+color: #ccc;
+margin-bottom: 16px;
+}
+
+.area {
+width: 100%;
+max-width: 480px;
+background: rgba(0,0,0,0.25);
+border-radius: 12px;
+padding: 12px;
+margin-bottom: 12px;
+min-height: 100px;
+}
+
+.area-label {
+font-size: 0.75rem;
+letter-spacing: 2px;
+color: rgba(255,255,255,0.5);
+text-transform: uppercase;
+margin-bottom: 8px;
+}
+
+.hand {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+}
+
+.card {
+width: 56px;
+height: 80px;
+background: #fffdf0;
+border-radius: 6px;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-start;
+padding: 4px 5px;
+font-size: 1rem;
+font-weight: bold;
+box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+position: relative;
+}
+
+.card.red { color: #cc0000; }
+.card.black { color: #111; }
+
+.card-center {
+position: absolute;
+bottom: 4px;
+right: 5px;
+font-size: 0.85rem;
+transform: rotate(180deg);
+}
+
+.card.back {
+background: #1a3a8c;
+border: 3px solid #4466cc;
+}
+
+.score {
+font-size: 0.9rem;
+color: #f0cc6e;
+margin-top: 8px;
+}
+
+.message {
+width: 100%;
+max-width: 480px;
+text-align: center;
+font-size: 1.4rem;
+font-weight: bold;
+color: #f0cc6e;
+min-height: 36px;
+margin-bottom: 8px;
+}
+
+/* BET SECTION */
+.bet-section {
+width: 100%;
+max-width: 480px;
+margin-bottom: 12px;
+}
+
+.bet-label {
+font-size: 0.85rem;
+color: #ccc;
+margin-bottom: 8px;
+text-align: center;
+}
+
+.chip-row {
+display: flex;
+justify-content: center;
+gap: 10px;
+flex-wrap: wrap;
+margin-bottom: 10px;
+}
+
+.chip {
+width: 54px;
+height: 54px;
+border-radius: 50%;
+border: 3px dashed rgba(255,255,255,0.5);
+color: white;
+font-family: Georgia, serif;
+font-size: 0.75rem;
+font-weight: bold;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+-webkit-tap-highlight-color: transparent;
+user-select: none;
+}
+
+.chip:active { opacity: 0.7; transform: scale(0.93); }
+.chip.c5   { background: #c0392b; }
+.chip.c25  { background: #27ae60; }
+.chip.c50  { background: #2471a3; }
+.chip.c100 { background: #7d3c98; }
+.chip.c500 { background: #2c3e50; }
+
+.bet-info {
+text-align: center;
+font-size: 1rem;
+color: #f0cc6e;
+margin-bottom: 10px;
+}
+
+/* BUTTONS */
+.btn-row {
+display: flex;
+justify-content: center;
+gap: 10px;
+flex-wrap: wrap;
+width: 100%;
+max-width: 480px;
+margin-bottom: 10px;
+}
+
+button.action {
+flex: 1;
+min-width: 70px;
+max-width: 120px;
+padding: 14px 8px;
+border: none;
+border-radius: 10px;
+font-family: Georgia, serif;
+font-size: 1rem;
+font-weight: bold;
+color: white;
+cursor: pointer;
+-webkit-tap-highlight-color: transparent;
+user-select: none;
+}
+
+button.action:active { opacity: 0.7; transform: scale(0.96); }
+
+button.action.deal   { background: #d4a847; color: #111; }
+button.action.clear  { background: #555; }
+button.action.hit    { background: #27ae60; }
+button.action.stand  { background: #c0392b; }
+button.action.double { background: #2471a3; }
+button.action.split  { background: #7d3c98; }
+button.action.next   { background: #d4a847; color: #111; }
+
+button.action:disabled {
+opacity: 0.35;
+cursor: default;
+transform: none;
+}
+
+.hidden { display: none !important; }
+</style>
+
 </head>
 <body>
 
-<!-- LOBBY SCREEN -->
+<h1>♠ Blackjack ♣</h1>
+<div class="chips-display">Chips: $<span id="chips">1000</span></div>
 
-<div id="lobby" class="screen active">
-  <div class="felt-bg"></div>
-  <div class="lobby-container">
-    <div class="logo">
-      <div class="suit-row">♠ ♥ ♦ ♣</div>
-      <h1>Royal Blackjack</h1>
-      <p class="tagline">Classic Casino. Real Action.</p>
-    </div>
-    <div class="lobby-cards">
-      <button class="lobby-card" id="btn-solo">
-        <div class="card-icon">🃏</div>
-        <h2>Solo Play</h2>
-        <p>Play against the dealer alone</p>
-      </button>
-      <button class="lobby-card" id="btn-host">
-        <div class="card-icon">👑</div>
-        <h2>Host Table</h2>
-        <p>Create a multiplayer room</p>
-      </button>
-      <button class="lobby-card" id="btn-join">
-        <div class="card-icon">🎴</div>
-        <h2>Join Table</h2>
-        <p>Enter a room code to join</p>
-      </button>
-    </div>
-    <div id="join-form" class="hidden">
-      <input type="text" id="room-code-input" placeholder="Enter room code..." maxlength="6" />
-      <input type="text" id="player-name-input" placeholder="Your name..." maxlength="16" />
-      <button id="btn-join-confirm" class="chip-btn gold">Join Game</button>
-      <button id="btn-join-cancel" class="chip-btn grey">Cancel</button>
-    </div>
-    <div id="host-form" class="hidden">
-      <input type="text" id="host-name-input" placeholder="Your name..." maxlength="16" />
-      <button id="btn-host-confirm" class="chip-btn gold">Create Room</button>
-      <button id="btn-host-cancel" class="chip-btn grey">Cancel</button>
-    </div>
+<!-- Dealer -->
+
+<div class="area">
+  <div class="area-label">Dealer</div>
+  <div class="hand" id="dealer-hand"></div>
+  <div class="score" id="dealer-score"></div>
+</div>
+
+<!-- Message -->
+
+<div class="message" id="message"></div>
+
+<!-- Player -->
+
+<div class="area">
+  <div class="area-label">You</div>
+  <div class="hand" id="player-hand"></div>
+  <div class="score" id="player-score"></div>
+</div>
+
+<!-- Bet section -->
+
+<div class="bet-section" id="bet-section">
+  <div class="bet-label">Place your bet</div>
+  <div class="chip-row">
+    <div class="chip c5"   onclick="placeBet(5)">$5</div>
+    <div class="chip c25"  onclick="placeBet(25)">$25</div>
+    <div class="chip c50"  onclick="placeBet(50)">$50</div>
+    <div class="chip c100" onclick="placeBet(100)">$100</div>
+    <div class="chip c500" onclick="placeBet(500)">$500</div>
+  </div>
+  <div class="bet-info">Bet: $<span id="bet-display">0</span></div>
+  <div class="btn-row">
+    <button class="action clear" onclick="clearBet()">Clear</button>
+    <button class="action deal"  onclick="deal()" id="btn-deal">Deal</button>
   </div>
 </div>
 
-<!-- WAITING ROOM -->
+<!-- Action buttons -->
 
-<div id="waiting-room" class="screen">
-  <div class="felt-bg"></div>
-  <div class="waiting-container">
-    <h2>Waiting Room</h2>
-    <div class="room-code-display">
-      Room Code: <span id="display-room-code">------</span>
-      <button id="btn-copy-code" class="chip-btn small">Copy</button>
-    </div>
-    <div id="player-list"></div>
-    <button id="btn-start-mp" class="chip-btn gold large">Start Game</button>
-    <button id="btn-leave-room" class="chip-btn grey">Leave Room</button>
-    <p id="waiting-msg" class="hint-text">Waiting for players to join...</p>
-  </div>
+<div class="btn-row hidden" id="action-section">
+  <button class="action hit"    onclick="hit()">Hit</button>
+  <button class="action stand"  onclick="stand()">Stand</button>
+  <button class="action double" onclick="doDouble()" id="btn-double">Double</button>
+  <button class="action split"  onclick="doSplit()"  id="btn-split">Split</button>
 </div>
 
-<!-- GAME SCREEN -->
+<!-- Next round -->
 
-<div id="game-screen" class="screen">
-  <div class="felt-bg"></div>
-
-  <!-- Top bar -->
-
-  <div class="top-bar">
-    <div class="player-info-bar" id="top-player-chips">
-      <span class="chip-icon">🪙</span>
-      <span id="player-chips-display">1000</span>
-    </div>
-    <div class="game-title-small">Royal Blackjack</div>
-    <div class="top-right-btns">
-      <button id="btn-hint" class="chip-btn small">💡 Hint</button>
-      <button id="btn-menu" class="chip-btn small">☰</button>
-    </div>
-  </div>
-
-  <!-- Multiplayer Seats (hidden in solo) -->
-
-  <div id="mp-seats" class="mp-seats hidden"></div>
-
-  <!-- Dealer Area -->
-
-  <div class="dealer-area">
-    <div class="area-label">Dealer</div>
-    <div id="dealer-hand" class="hand"></div>
-    <div id="dealer-score" class="score-badge">0</div>
-  </div>
-
-  <!-- Hint Box -->
-
-  <div id="hint-box" class="hint-box hidden"></div>
-
-  <!-- Player Area -->
-
-  <div class="player-area">
-    <div class="area-label" id="your-label">You</div>
-    <div id="player-hands-wrapper">
-      <!-- Hands rendered by JS (supports split) -->
-    </div>
-  </div>
-
-  <!-- Betting Bar -->
-
-  <div id="bet-bar" class="bet-bar">
-    <div class="chips-row">
-      <button class="chip c5"   data-val="5">$5</button>
-      <button class="chip c25"  data-val="25">$25</button>
-      <button class="chip c50"  data-val="50">$50</button>
-      <button class="chip c100" data-val="100">$100</button>
-      <button class="chip c500" data-val="500">$500</button>
-    </div>
-    <div class="bet-info">
-      <span>Bet: $<span id="current-bet-display">0</span></span>
-      <button id="btn-clear-bet" class="chip-btn small grey">Clear</button>
-      <button id="btn-deal"      class="chip-btn gold large">Deal</button>
-    </div>
-  </div>
-
-  <!-- Action Bar -->
-
-  <div id="action-bar" class="action-bar hidden">
-    <button id="btn-hit"       class="action-btn green">Hit</button>
-    <button id="btn-stand"     class="action-btn red">Stand</button>
-    <button id="btn-double"    class="action-btn blue">Double</button>
-    <button id="btn-split"     class="action-btn purple">Split</button>
-  </div>
-
-  <!-- Result overlay -->
-
-  <div id="result-overlay" class="result-overlay hidden">
-    <div class="result-box">
-      <div id="result-title" class="result-title"></div>
-      <div id="result-detail" class="result-detail"></div>
-      <button id="btn-next-round" class="chip-btn gold large">Next Round</button>
-    </div>
-  </div>
-
-  <!-- Menu overlay -->
-
-  <div id="menu-overlay" class="menu-overlay hidden">
-    <div class="menu-box">
-      <h3>Menu</h3>
-      <button id="btn-resume" class="chip-btn gold">Resume</button>
-      <button id="btn-back-lobby" class="chip-btn grey">Back to Lobby</button>
-    </div>
-  </div>
+<div class="btn-row hidden" id="next-section">
+  <button class="action next" onclick="nextRound()">Next Round</button>
 </div>
 
-<script src="21cc.js"></script>
+<script>
+// ── Deck ──────────────────────────────────────────────────────
+var SUITS  = ['♠','♥','♦','♣'];
+var RANKS  = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+var shoe   = [];
+
+function buildShoe() {
+  shoe = [];
+  for (var d = 0; d < 6; d++)
+    for (var s = 0; s < SUITS.length; s++)
+      for (var r = 0; r < RANKS.length; r++)
+        shoe.push({ rank: RANKS[r], suit: SUITS[s] });
+  shuffle(shoe);
+}
+
+function shuffle(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+}
+
+function draw() {
+  if (shoe.length < 30) buildShoe();
+  return shoe.pop();
+}
+
+function total(hand) {
+  var t = 0, aces = 0;
+  for (var i = 0; i < hand.length; i++) {
+    var r = hand[i].rank;
+    if (r === 'A') { t += 11; aces++; }
+    else if (r === 'J' || r === 'Q' || r === 'K') t += 10;
+    else t += parseInt(r);
+  }
+  while (t > 21 && aces > 0) { t -= 10; aces--; }
+  return t;
+}
+
+function isBJ(hand)   { return hand.length === 2 && total(hand) === 21; }
+function isBust(hand) { return total(hand) > 21; }
+function isRed(card)  { return card.suit === '♥' || card.suit === '♦'; }
+
+// ── State ─────────────────────────────────────────────────────
+var chips       = 1000;
+var bet         = 0;
+var playerHands = [[]];   // supports split
+var handIdx     = 0;
+var dealerHand  = [];
+var phase       = 'betting'; // betting | playing | done
+
+buildShoe();
+
+// ── Render ────────────────────────────────────────────────────
+function renderCard(card, hidden) {
+  var el = document.createElement('div');
+  if (hidden) {
+    el.className = 'card back';
+    return el;
+  }
+  el.className = 'card ' + (isRed(card) ? 'red' : 'black');
+  el.innerHTML =
+    '<div>' + card.rank + '</div>' +
+    '<div>' + card.suit + '</div>' +
+    '<div class="card-center">' + card.suit + '</div>';
+  return el;
+}
+
+function renderHand(elId, hand, hideSecond) {
+  var el = document.getElementById(elId);
+  el.innerHTML = '';
+  for (var i = 0; i < hand.length; i++) {
+    el.appendChild(renderCard(hand[i], hideSecond && i === 1));
+  }
+}
+
+function renderAll(hideDealer) {
+  // Dealer
+  renderHand('dealer-hand', dealerHand, hideDealer);
+  document.getElementById('dealer-score').textContent =
+    hideDealer && dealerHand.length
+      ? 'Score: ' + (dealerHand[0].rank === 'A' ? 11 : Math.min(parseInt(dealerHand[0].rank)||10, 10))
+      : (dealerHand.length ? 'Score: ' + total(dealerHand) : '');
+
+  // Player — show active hand
+  var hand = playerHands[handIdx] || [];
+  renderHand('player-hand', hand, false);
+  document.getElementById('player-score').textContent =
+    hand.length ? 'Score: ' + total(hand) : '';
+
+  // Chips & bet
+  document.getElementById('chips').textContent = chips;
+  document.getElementById('bet-display').textContent = bet;
+}
+
+function setPhase(p) {
+  phase = p;
+  document.getElementById('bet-section').classList.toggle('hidden',    p !== 'betting');
+  document.getElementById('action-section').classList.toggle('hidden', p !== 'playing');
+  document.getElementById('next-section').classList.toggle('hidden',   p !== 'done');
+  if (p === 'playing') updateActionBtns();
+}
+
+function updateActionBtns() {
+  var hand = playerHands[handIdx];
+  var canDouble = hand.length === 2 && chips >= bet;
+  var canSplit  = hand.length === 2 && hand[0].rank === hand[1].rank && chips >= bet && playerHands.length < 4;
+  document.getElementById('btn-double').disabled = !canDouble;
+  document.getElementById('btn-split').disabled  = !canSplit;
+}
+
+function msg(text) {
+  document.getElementById('message').textContent = text;
+}
+
+// ── Betting ───────────────────────────────────────────────────
+function placeBet(amount) {
+  if (phase !== 'betting') return;
+  if (bet + amount > chips) return;
+  bet += amount;
+  document.getElementById('bet-display').textContent = bet;
+}
+
+function clearBet() {
+  if (phase !== 'betting') return;
+  bet = 0;
+  document.getElementById('bet-display').textContent = 0;
+}
+
+// ── Deal ──────────────────────────────────────────────────────
+function deal() {
+  if (bet <= 0) { msg('Place a bet first!'); return; }
+  chips -= bet;
+  playerHands = [[draw(), draw()]];
+  handIdx     = 0;
+  dealerHand  = [draw(), draw()];
+  msg('');
+  renderAll(true);
+  setPhase('playing');
+
+  if (isBJ(playerHands[0])) {
+    endPlaying();
+  }
+}
+
+// ── Player actions ────────────────────────────────────────────
+function hit() {
+  if (phase !== 'playing') return;
+  playerHands[handIdx].push(draw());
+  renderAll(true);
+  if (isBust(playerHands[handIdx]) || total(playerHands[handIdx]) === 21) {
+    nextHand();
+  } else {
+    updateActionBtns();
+  }
+}
+
+function stand() {
+  if (phase !== 'playing') return;
+  nextHand();
+}
+
+function doDouble() {
+  if (phase !== 'playing') return;
+  var hand = playerHands[handIdx];
+  if (hand.length !== 2 || chips < bet) return;
+  chips -= bet;
+  bet   *= 2;
+  hand.push(draw());
+  renderAll(true);
+  nextHand();
+}
+
+function doSplit() {
+  if (phase !== 'playing') return;
+  var hand = playerHands[handIdx];
+  if (hand.length !== 2 || hand[0].rank !== hand[1].rank || chips < bet) return;
+  chips -= bet;
+  var newHand = [hand.pop()];
+  hand.push(draw());
+  newHand.push(draw());
+  playerHands.splice(handIdx + 1, 0, newHand);
+  renderAll(true);
+  updateActionBtns();
+}
+
+function nextHand() {
+  var next = -1;
+  for (var i = handIdx + 1; i < playerHands.length; i++) {
+    if (!isBust(playerHands[i])) { next = i; break; }
+  }
+  if (next !== -1) {
+    handIdx = next;
+    renderAll(true);
+    updateActionBtns();
+  } else {
+    endPlaying();
+  }
+}
+
+// ── Dealer + resolve ──────────────────────────────────────────
+function endPlaying() {
+  // Dealer plays
+  while (total(dealerHand) < 17) dealerHand.push(draw());
+  renderAll(false);
+
+  var dTotal = total(dealerHand);
+  var dBust  = isBust(dealerHand);
+  var dBJ    = isBJ(dealerHand);
+  var results = [];
+
+  for (var i = 0; i < playerHands.length; i++) {
+    var hand   = playerHands[i];
+    var pTotal = total(hand);
+    var pBust  = isBust(hand);
+    var pBJ    = isBJ(hand) && playerHands.length === 1;
+    var betAmt = i === 0 ? bet : bet / playerHands.length * 2; // approximate for splits
+    var win    = 0;
+    var label  = '';
+
+    if (pBust) {
+      label = 'Bust'; win = 0;
+    } else if (pBJ && !dBJ) {
+      label = 'Blackjack! 🎉'; win = Math.floor(bet * 2.5);
+    } else if (dBust || pTotal > dTotal) {
+      label = 'You Win! 🎉'; win = bet * 2;
+    } else if (pTotal === dTotal) {
+      label = 'Push'; win = bet;
+    } else {
+      label = 'Dealer Wins'; win = 0;
+    }
+
+    chips += win;
+    results.push(label);
+  }
+
+  document.getElementById('chips').textContent = chips;
+  msg(results.join('  |  '));
+  setPhase('done');
+
+  if (chips <= 0) {
+    msg('Out of chips! Restarting...');
+    setTimeout(function() { chips = 1000; nextRound(); }, 2500);
+  }
+}
+
+// ── Next round ────────────────────────────────────────────────
+function nextRound() {
+  bet         = 0;
+  playerHands = [[]];
+  handIdx     = 0;
+  dealerHand  = [];
+  document.getElementById('dealer-hand').innerHTML = '';
+  document.getElementById('dealer-score').textContent = '';
+  document.getElementById('player-hand').innerHTML = '';
+  document.getElementById('player-score').textContent = '';
+  document.getElementById('chips').textContent = chips;
+  document.getElementById('bet-display').textContent = 0;
+  msg('');
+  setPhase('betting');
+}
+</script>
 
 </body>
 </html>
