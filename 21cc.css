@@ -47,6 +47,7 @@ html, body {
   background:
     radial-gradient(ellipse at 50% 50%, var(--felt-light) 0%, var(--felt) 40%, var(--felt-dark) 100%);
   z-index: 0;
+  pointer-events: none;
 }
 .felt-bg::before {
   content: '';
