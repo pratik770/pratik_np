@@ -27,6 +27,14 @@ html, body {
   font-family: 'Lato', sans-serif;
   background: var(--felt-dark);
   overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button, .lobby-card {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
 }
 
 /* ===================== SCREENS ===================== */
@@ -113,6 +121,13 @@ html, body {
   transition: all 0.25s ease;
   min-width: 160px;
   color: var(--white);
+  font-family: 'Lato', sans-serif;
+  -webkit-appearance: none;
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
 }
 .lobby-card:hover {
   background: rgba(0,0,0,0.55);
