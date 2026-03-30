@@ -32,13 +32,13 @@ html, body {
 /* ===================== SCREENS ===================== */
 .screen {
   position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.4s ease;
+  display: none; align-items: center; justify-content: center;
   overflow: hidden;
+  pointer-events: none;
 }
 .screen.active {
-  opacity: 1; pointer-events: all;
+  display: flex;
+  pointer-events: all;
 }
 
 /* ===================== FELT BACKGROUND ===================== */
@@ -218,7 +218,7 @@ html, body {
 .chip-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
 
 /* ===================== GAME SCREEN LAYOUT ===================== */
-#game-screen {
+#game-screen.active {
   flex-direction: column;
   justify-content: space-between;
   padding: 0;
