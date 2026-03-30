@@ -767,75 +767,80 @@ document.querySelectorAll(’.screen’).forEach(s => s.classList.remove(‘acti
 document.getElementById(id).classList.add(‘active’);
 }
 
+// ─── iOS Safari touch helper ──────────────────────────────────
+function addTap(id, fn) {
+const el = document.getElementById(id);
+if (!el) return;
+el.addEventListener(‘click’, fn);
+el.addEventListener(‘touchend’, (e) => { e.preventDefault(); fn(e); });
+}
+
 // ─── Event wiring ─────────────────────────────────────────────
 window.addEventListener(‘DOMContentLoaded’, () => {
 // Lobby
-document.getElementById(‘btn-solo’).onclick = () => startSolo();
-document.getElementById(‘btn-host’).onclick = () => {
+addTap(‘btn-solo’, () => startSolo());
+addTap(‘btn-host’, () => {
 document.getElementById(‘host-form’).classList.remove(‘hidden’);
 document.getElementById(‘join-form’).classList.add(‘hidden’);
-};
-document.getElementById(‘btn-host-confirm’).onclick = () => hostGame();
-document.getElementById(‘btn-host-cancel’).onclick = () => document.getElementById(‘host-form’).classList.add(‘hidden’);
-document.getElementById(‘btn-join’).onclick = () => {
+});
+addTap(‘btn-host-confirm’, () => hostGame());
+addTap(‘btn-host-cancel’, () => document.getElementById(‘host-form’).classList.add(‘hidden’));
+addTap(‘btn-join’, () => {
 document.getElementById(‘join-form’).classList.remove(‘hidden’);
 document.getElementById(‘host-form’).classList.add(‘hidden’);
-};
-document.getElementById(‘btn-join-confirm’).onclick = () => joinGame();
-document.getElementById(‘btn-join-cancel’).onclick = () => document.getElementById(‘join-form’).classList.add(‘hidden’);
+});
+addTap(‘btn-join-confirm’, () => joinGame());
+addTap(‘btn-join-cancel’, () => document.getElementById(‘join-form’).classList.add(‘hidden’));
 
 // Waiting room
-document.getElementById(‘btn-copy-code’).onclick = () => {
+addTap(‘btn-copy-code’, () => {
 navigator.clipboard.writeText(state.roomCode).then(() => {
 document.getElementById(‘btn-copy-code’).textContent = ‘Copied!’;
 setTimeout(() => document.getElementById(‘btn-copy-code’).textContent = ‘Copy’, 2000);
 });
-};
-document.getElementById(‘btn-start-mp’).onclick = () => startMpGame();
-document.getElementById(‘btn-leave-room’).onclick = () => {
+});
+addTap(‘btn-start-mp’, () => startMpGame());
+addTap(‘btn-leave-room’, () => {
 if (state.peer) state.peer.destroy();
 showScreen(‘lobby’);
-};
+});
 
 // Chips
 document.querySelectorAll(’.chip’).forEach(btn => {
-btn.onclick = () => {
 const val = parseInt(btn.dataset.val);
-placeBet(val);
-};
+btn.addEventListener(‘click’, () => placeBet(val));
+btn.addEventListener(‘touchend’, (e) => { e.preventDefault(); placeBet(val); });
 });
-document.getElementById(‘btn-clear-bet’).onclick = clearBet;
-document.getElementById(‘btn-deal’).onclick = () => {
+addTap(‘btn-clear-bet’, clearBet);
+addTap(‘btn-deal’, () => {
 if (state.mode === ‘solo’) deal();
 else mpDeal();
-};
+});
 
 // Actions
-document.getElementById(‘btn-hit’).onclick = () => {
+addTap(‘btn-hit’, () => {
 if (state.mode === ‘solo’) hit();
 else mpPlayerAction(‘hit’);
-};
-document.getElementById(‘btn-stand’).onclick = () => {
+});
+addTap(‘btn-stand’, () => {
 if (state.mode === ‘solo’) stand();
 else mpPlayerAction(‘stand’);
-};
-document.getElementById(‘btn-double’).onclick = () => {
+});
+addTap(‘btn-double’, () => {
 if (state.mode === ‘solo’) doubleDown();
 else mpPlayerAction(‘double’);
-};
-document.getElementById(‘btn-split’).onclick = () => {
+});
+addTap(‘btn-split’, () => {
 if (state.mode === ‘solo’) split();
-// Split in MP not implemented for simplicity
-};
+});
 
 // Hint
-document.getElementById(‘btn-hint’).onclick = showHint;
+addTap(‘btn-hint’, showHint);
 
 // Next round
-document.getElementById(‘btn-next-round’).onclick = () => {
+addTap(‘btn-next-round’, () => {
 if (state.mode === ‘solo’) newRound();
 else {
-// In MP, all players ready → host restarts
 if (state.isHost) {
 state.players.forEach(p => { p.hand = []; p.bet = 0; p.done = false; p.result = ‘’; p.status = ‘betting’; });
 hostBroadcast({ type: ‘game_start’, players: state.players });
@@ -846,18 +851,18 @@ state.phase = ‘dealer’;
 setPhaseUI(‘dealer’);
 }
 }
-};
+});
 
 // Menu
-document.getElementById(‘btn-menu’).onclick = () => {
+addTap(‘btn-menu’, () => {
 document.getElementById(‘menu-overlay’).classList.toggle(‘hidden’);
-};
-document.getElementById(‘btn-resume’).onclick = () => {
+});
+addTap(‘btn-resume’, () => {
 document.getElementById(‘menu-overlay’).classList.add(‘hidden’);
-};
-document.getElementById(‘btn-back-lobby’).onclick = () => {
+});
+addTap(‘btn-back-lobby’, () => {
 if (state.peer) state.peer.destroy();
 document.getElementById(‘menu-overlay’).classList.add(‘hidden’);
 showScreen(‘lobby’);
-};
+});
 });
