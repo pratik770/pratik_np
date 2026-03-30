@@ -1,10 +1,8 @@
 /* ============================================================
-Royal Blackjack — game.js
+Royal Blackjack — 21cc.js
 Features: multi-deck, betting, split, double down,
 basic strategy hints, P2P multiplayer (PeerJS)
 ============================================================ */
-
-‘use strict’;
 
 // ─── PeerJS loaded lazily ────────────────────────────────────
 let Peer = null;
@@ -768,12 +766,32 @@ document.getElementById(id).classList.add(‘active’);
 }
 
 // ─── iOS Safari touch helper ──────────────────────────────────
+// Only use ‘click’ — iOS Safari fires click on <button> elements reliably.
+// touch-action:manipulation in CSS removes the 300ms delay.
+// Adding both click+touchend caused double-firing bugs.
 function addTap(id, fn) {
-const el = document.getElementById(id);
+var el = document.getElementById(id);
 if (!el) return;
-el.addEventListener(‘click’, fn);
-el.addEventListener(‘touchend’, (e) => { e.preventDefault(); fn(e); });
+el.addEventListener(‘click’, function(e) {
+e.stopPropagation();
+try { fn(); } catch(err) { showDebug(err); }
+});
 }
+
+function showDebug(err) {
+var d = document.getElementById(‘debug-bar’);
+if (!d) {
+d = document.createElement(‘div’);
+d.id = ‘debug-bar’;
+d.style.cssText = ‘position:fixed;bottom:0;left:0;right:0;background:red;color:white;font-size:12px;padding:6px;z-index:9999;word-break:break-all;’;
+document.body.appendChild(d);
+}
+d.textContent = ’ERR: ’ + (err && err.message ? err.message : String(err));
+}
+
+window.onerror = function(msg, src, line) {
+showDebug({ message: msg + ’ (line ’ + line + ‘)’ });
+};
 
 // ─── Event wiring ─────────────────────────────────────────────
 window.addEventListener(‘DOMContentLoaded’, () => {
